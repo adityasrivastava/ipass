@@ -3,6 +3,7 @@ package com.mds.passkit.test;
 import com.mds.passkit.Aviva;
 import com.mds.passkit.exception.PasskitException;
 import com.mds.passkit.utils.PassKitUtils;
+import com.ryantenney.passkit4j.model.Field;
 import com.ryantenney.passkit4j.model.PassInformation;
 import com.ryantenney.passkit4j.model.StoreCard;
 import com.ryantenney.passkit4j.model.TextField;
@@ -21,9 +22,11 @@ public class IOSPassKitManagerTest {
       Aviva aviva = new Aviva();
       
       long unixTime = System.currentTimeMillis() / 1000L;
+      
+      
 
       try {
-        aviva.generateStorePass("/Users/adityasrivastava/Desktop/testfiles7891.pkpass", "12345678912345678", "323323",  new StoreCard()
+        aviva.generateStorePass("/Users/adityasrivastava/Desktop/file3.pkpass", "12345678912345678", "222",  new StoreCard()
         	      .headerFields(new TextField("card", "card_label"))
         	      .auxiliaryFields(
         	              new TextField("name", "client_name", "Test Client"),

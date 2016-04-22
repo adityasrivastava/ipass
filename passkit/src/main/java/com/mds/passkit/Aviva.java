@@ -38,6 +38,11 @@ public class Aviva {
     	
     	try {
             String resourcePath = properties.getProperty(PasskitConstants.Keys.RESOURCE_LOCATION_PATH);
+            
+            Location location = new Location();
+            location.latitude(28.6139);
+            location.longitude(77.2090);
+            location.relevantText("Hi this is test message");
 
             Pass pass = new Pass()
                     .teamIdentifier(properties.getProperty(PasskitConstants.Keys.TEAM_IDENTIFIER))
@@ -50,8 +55,9 @@ public class Aviva {
                     .logoText(properties.getProperty(PasskitConstants.Keys.LOGO_TEXT))
                     .foregroundColor(Color.BLACK)
                     .backgroundColor(new Color(254, 220, 56))
-                    .relevantDate(new Date().getTime())
+                    .relevantDate(new Date())
                     .description("Just Updating and Testing")
+                    
                     .files(
                             new PassResource("en.lproj/pass.strings", new File(resourcePath + "/en.lproj/pass.strings")),
                             new PassResource(resourcePath + "/icon.png"),
@@ -62,6 +68,8 @@ public class Aviva {
                             new PassResource(resourcePath + "/strip@2x.png")
                     )
                     .passInformation(passInfo);
+            
+            System.out.println("Relevant Date: "+pass.relevantDate());
 
             String P12_CERTIFICATE_FILE_PATH = properties.getProperty(PasskitConstants.Keys.P12_CERTIFICATE_FILE_PATH);
             String APPLE_WWDRCA_FILE_PATH = properties.getProperty(PasskitConstants.Keys.APPLE_WWDRCA_FILE_PATH);
