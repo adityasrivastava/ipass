@@ -25,17 +25,32 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mds.passbook.notification.PassbookNotification;
 import com.mds.passkit.GeneratePass;
 
+/**
+ * Apple Wallet webservice which allow Update, Delete, Add new Pass to wallet of an iOS device
+ * 
+ * @author adityasrivastava
+ *
+ */
 @RestController
 public class PushNotificationController {
 	
 	public static final Logger logger = LoggerFactory.getLogger(PushNotificationController.class);
 	public static String token = "15c19c99888bed405f91785e4140b9f267c3f8fc191556ae562fb96ab31f83f4";
 	
-
+	/**
+	 * Check Server status
+	 */
 	@RequestMapping(value="/serverStatus", method=RequestMethod.GET)
 	public String serverStatus(){
 		return "Server Working...";
 	}
+	
+	/**
+	 * Download new pass 
+	 * 
+	 * @return Pkpass file
+	 * @throws IOException
+	 */
 	
 	@RequestMapping(value="/downloadPass", method=RequestMethod.GET, produces="application/vnd.apple.pkpass")
 	public ResponseEntity<InputStreamResource> downloadPass (
@@ -44,28 +59,34 @@ public class PushNotificationController {
 		File newPass;
 		InputStream passInputStream;
 		HttpHeaders responseHeaders;
-		GeneratePass gp;
+		GeneratePass generatePass;
 	
 		responseHeaders = new HttpHeaders();
-		gp = new GeneratePass();
+		generatePass = new GeneratePass();
 		
+		logger.info("Downloading Pass.....");
+		
+		// Create Pass
 		try {
-			gp.createPass("passes/file3.pkpass", "222");
+			generatePass.createPass("passes/file3.pkpass", "222");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
+		// Get new generated pass
 		newPass = new File("passes/file3.pkpass");
 		
 		fileLength = newPass.length();
 		passInputStream = new FileInputStream(newPass);
 
+		// Setup headers for 0 expiry and no cache
 		responseHeaders.add("Cache-Control", "no-cache, no-store, must-revalidate");
 		responseHeaders.add("Pragma", "no-cache");
 		responseHeaders.add("Expires", "0");
 		responseHeaders.setContentDispositionFormData("filename", "file1.pkpass");
 		responseHeaders.setLastModified(new Date().getTime());
 
+		// Send in response
 		return ResponseEntity
 	            .ok()
 	            .headers(responseHeaders)
@@ -73,14 +94,29 @@ public class PushNotificationController {
 	            .body(new InputStreamResource(passInputStream));
 	}
 	
+	/**
+	 * Send a push notification to APN server for new updates notification to 
+	 * devices with registerd passes
+	 */
 	@RequestMapping(value="/pushNotifications")
 	public void pushToken(){
-		System.out.println("Token :>>"+token);
+		
 		PassbookNotification pushNotification = new PassbookNotification();
 		pushNotification.initialize(token);
+		
+		logger.info("Push notification initiated....");
 
 	}
 	
+	/**
+	 * To Add newly register pass of a device with push token 
+	 * 
+	 * @param deviceLibraryIdentifier - Device UUID ( DeviceId )
+	 * @param passTypeIdentifier - Pass Type Id ( Bundle Id )
+	 * @param serialNumber - Pass Serial Number
+	 * @param payload - Wallet request body with Push Token ( Device Token )
+	 * @return 201 Status
+	 */
 	@RequestMapping(value="/v1/devices/{deviceLibraryIdentifier}/registrations/{passTypeIdentifier}/{serialNumber}", method=RequestMethod.POST)
 	public ResponseEntity<String> addPassbook(
 							   @PathVariable("deviceLibraryIdentifier") String deviceLibraryIdentifier,
@@ -88,13 +124,25 @@ public class PushNotificationController {
 							   @PathVariable("serialNumber") String serialNumber,
 							   @RequestBody(required=false) Map<String, Object> payload){
 		
-		logger.info("DeviceLib: {} >>> PassType: {} >>> SerialNo.: {}",deviceLibraryIdentifier, passTypeIdentifier, serialNumber); 
-		logger.info("Request: {}", payload);
+		logger.info("Adding Passbook......");
+		logger.debug("DeviceLib: {} >>> PassType: {} >>> SerialNo.: {}",deviceLibraryIdentifier, passTypeIdentifier, serialNumber); 
+		logger.debug("Request: {}", payload);
 	
 		token = payload.get("pushToken").toString();
 
 		return new ResponseEntity<String>(HttpStatus.CREATED);
 	}
+	
+	/**
+	 * Send response with list of serial number of pass which have been recently updated 
+	 * with last update timestamp in JSON
+	 * 
+	 * @param deviceLibraryIdentifier - Device UUID ( DeviceId )
+	 * @param passTypeIdentifier - Pass Type Id ( Bundle Id )
+	 * @param passesUpdatedSince - Updated last timestamp
+	 * @param payload - Wallet request body
+	 * @return JSON string with serial number array and lastUpdated
+	 */
 	
 	@RequestMapping(value="/v1/devices/{deviceLibraryIdentifier}/registrations/{passTypeIdentifier}", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> getSerialIdsOfPassForDevice(
@@ -102,18 +150,26 @@ public class PushNotificationController {
 							   @PathVariable("passTypeIdentifier") String passTypeIdentifier,
 							   @RequestParam(value="passesUpdatedSince", required=false) String passesUpdatedSince,
 							   @RequestBody(required=false) Map<String, Object> payload){
-		System.out.println("In getSerialIdsOfPassForDevice");
-		logger.info("DeviceLib: {} >>> PassType: {}",deviceLibraryIdentifier, passTypeIdentifier); 
+		
+		logger.info("Sending list of serial no. request for update....");
+		logger.debug("DeviceLib: {} >>> PassType: {}",deviceLibraryIdentifier, passTypeIdentifier); 
 		
 		if(passesUpdatedSince !=null){
-			logger.info("Update Tag: "+passesUpdatedSince);
+			logger.debug("Update Tag: "+passesUpdatedSince);
 		}
 		
-		logger.info("Request: {}", payload);
+		logger.debug("Request: {}", payload);
 	
 		return new ResponseEntity<String>("{\"serialNumbers\": [\"222\"], \"lastUpdated\" : \""+new Timestamp(System.currentTimeMillis() - (1000 * 60 * 60))+"\"}", HttpStatus.OK);
 	}
 	
+	/**
+	 * 
+	 * @param deviceLibraryIdentifier - Device UUID ( DeviceId )
+	 * @param passTypeIdentifier - Pass Type Id ( Bundle Id )
+	 * @return updated new pass in response to device
+	 * @throws IOException
+	 */
 	@RequestMapping(value="/v1/passes/{passTypeIdentifier}/{serialNumber}", method=RequestMethod.GET)
 	public ResponseEntity<InputStreamResource> updatePassbook (
 							   @PathVariable("passTypeIdentifier") String passTypeIdentifier,
@@ -124,24 +180,28 @@ public class PushNotificationController {
 		InputStream passInputStream;
 		HttpHeaders responseHeaders;
 		GeneratePass gp;
-		System.out.println("Test");
-		logger.info("PassType: {} >>> SerialNo.: {}",passTypeIdentifier, serialNumber); 
-		logger.info("Request: {}", payload);
-		System.out.println("In updatePassbook");
+	
+		logger.info("Generating pass for update response....");
+		logger.debug("PassType: {} >>> SerialNo.: {}",passTypeIdentifier, serialNumber); 
+		logger.debug("Request: {}", payload);
+	
 		responseHeaders = new HttpHeaders();
 		gp = new GeneratePass();
 		
+		// Create Pass
 		try {
 			gp.createPass("passes/file3.pkpass", "222");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
+		// Get new generated pass
 		newPass = new File("passes/file3.pkpass");
 		
 		fileLength = newPass.length();
 		passInputStream = new FileInputStream(newPass);
 
+		// Setup headers for 0 expiry and no cache
 		responseHeaders.add("Cache-Control", "no-cache, no-store, must-revalidate");
 		responseHeaders.add("Pragma", "no-cache");
 		responseHeaders.add("Expires", "0");
@@ -149,6 +209,7 @@ public class PushNotificationController {
 		responseHeaders.setContentDispositionFormData("filename", "file1.pkpass");
 		responseHeaders.setLastModified(new Date().getTime());
 
+		// Send in response
 		return ResponseEntity
 	            .ok()
 	            .headers(responseHeaders)
@@ -156,6 +217,13 @@ public class PushNotificationController {
 	            .body(new InputStreamResource(passInputStream));
 	}
 	
+	/**
+	 * 
+	 * @param deviceLibraryIdentifier - Device UUID ( DeviceId )
+	 * @param passTypeIdentifier - Pass Type Id ( Bundle Id )
+	 * @param serialNumber - Pass Serial Number
+	 * @return 200 Status 
+	 */
 	@RequestMapping(value="/v1/devices/{deviceLibraryIdentifier}/registrations/{passTypeIdentifier}/{serialNumber}", method=RequestMethod.DELETE)
 	public ResponseEntity<String> deletePassbook(
 							   @PathVariable("deviceLibraryIdentifier") String deviceLibraryIdentifier,
@@ -163,17 +231,21 @@ public class PushNotificationController {
 							   @PathVariable("serialNumber") String serialNumber,
 							   @RequestBody(required=false) Map<String, Object> payload){
 		
-		logger.info("DeviceLib: {} >>> PassType: {} >>> SerialNo.: {}",deviceLibraryIdentifier, passTypeIdentifier, serialNumber); 
-		logger.info("Request: {}", payload);
+		logger.info("Delete pass as requested by user.....");
+		logger.debug("DeviceLib: {} >>> PassType: {} >>> SerialNo.: {}",deviceLibraryIdentifier, passTypeIdentifier, serialNumber); 
+		logger.debug("Request: {}", payload);
 		
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 	
+	/**
+	 * Logging device errors from request body sent by a particular Device
+	 */
 	@RequestMapping(value="/v1/log", method=RequestMethod.POST)
 	public void logPassbookErrors(
 							   @RequestBody Map<String, Object> payload){
- 
-		logger.info("Request: {}", payload);
+		
+		logger.debug("Request: {}", payload);
 
 	}
 }

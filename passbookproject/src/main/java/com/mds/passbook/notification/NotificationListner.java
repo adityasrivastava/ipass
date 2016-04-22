@@ -4,6 +4,9 @@ import com.relayrides.pushy.apns.ApnsClient;
 import com.relayrides.pushy.apns.ApnsClientMetricsListener;
 import com.relayrides.pushy.apns.ApnsPushNotification;
 
+/*
+ * Notification device response listner
+ */
 public class NotificationListner implements ApnsClientMetricsListener{
 
 	@Override

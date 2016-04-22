@@ -1,8 +1,5 @@
 package com.mds.passkit.exception;
 
-/**
- * Created by mradul on 07/03/16.
- */
 public class PasskitException extends  Exception {
 
     public PasskitException() {

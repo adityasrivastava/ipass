@@ -11,30 +11,13 @@ import com.ryantenney.passkit4j.model.Generic;
 import com.ryantenney.passkit4j.model.StoreCard;
 import com.ryantenney.passkit4j.model.TextField;
 
+/*
+ * Generate new pass and store to system configure file in myapplication.properties file in resources
+ */
 public class GeneratePass {
 	
 	private Properties properites;
 	private StorePassContainer storeCardPass;
-	
-	public void createEventPass(String passLocation, String authToken,String serialNumber,EventTicket eventTicket){
-		
-	}
-	
-	public void createGenericPass(Generic passDetails){
-		
-	}
-	
-	public void createStorePass(String fileLocation, String authToken, String serialNumber, StoreCard passDetails){
-		
-		StorePassContainer storePass = new StorePassContainer();
-		
-		try {
-			storePass.createPass(fileLocation, authToken, serialNumber, passDetails);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-	}
 	
 	public void createPass(String passLocation, String serialNumber) throws IOException{
 		

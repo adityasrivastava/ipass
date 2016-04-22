@@ -15,6 +15,9 @@ import com.relayrides.pushy.apns.util.SimpleApnsPushNotification;
 
 import io.netty.util.concurrent.Future;
 
+/**
+ * Push Notification to Apple Push Notification Service for new update of pass for devices.
+ */
 public class PassbookNotification {
 	
 	private ApnsClient<SimpleApnsPushNotification> apnsClient;
@@ -23,23 +26,22 @@ public class PassbookNotification {
 	
 	public void initialize(String token){
 		try {
-			System.out.println(token);
-			// Request to push notification to Apple Push Notification Server 
+			
+		
+			// Initiate Apns credentials and wait for response
 			
 			apnsClient = new ApnsClient<>(new File("logs/Certificates.p12"),"passbookapp");
-			apnsClient.setMetricsListener(new NotificationListner());
-			
-			System.out.println(ApnsClient.PRODUCTION_APNS_HOST);
-			
+			apnsClient.setMetricsListener(new NotificationListner());		
 			connectFuture = apnsClient.connect(ApnsClient.PRODUCTION_APNS_HOST);
 			connectFuture.await();
 			
+			// Create and send response to APNS
 			builder = new ApnsPayloadBuilder();
 			SimpleApnsPushNotification notification = new SimpleApnsPushNotification(token,"pass.com.mds.passbookapp", builder.buildWithDefaultMaximumLength());
 			Future<PushNotificationResponse<SimpleApnsPushNotification>> sendNotificationFuture = apnsClient.sendNotification(notification);
 			
 			
-			// Get Response for checking
+			// Get APNS Response for checking
 			
 			try {
 			    final PushNotificationResponse<SimpleApnsPushNotification> pushNotificationResponse =

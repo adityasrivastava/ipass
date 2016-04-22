@@ -22,8 +22,6 @@ public class IOSPassKitManagerTest {
       Aviva aviva = new Aviva();
       
       long unixTime = System.currentTimeMillis() / 1000L;
-      
-      
 
       try {
         aviva.generateStorePass("/Users/adityasrivastava/Desktop/file3.pkpass", "12345678912345678", "222",  new StoreCard()

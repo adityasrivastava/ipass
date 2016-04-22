@@ -11,8 +11,8 @@ import com.ryantenney.passkit4j.sign.PassSigningException;
 
 import java.io.*;
 
-/**
- * Created by mradul on 07/03/16.
+/*
+ * Pass generation pkpass file and sign for deployment on Wallet App
  */
 public class IOSPassKitManager implements PassKitManager,PasskitConstants {
 

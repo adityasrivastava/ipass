@@ -1,9 +1,7 @@
 package com.mds.passkit.constants;
 
-
-
-/**
- * Created by mradul on 07/03/16.
+/*
+ * Pass internal required variable constants for Wallet App in iOS
  */
 public interface PasskitConstants {
 

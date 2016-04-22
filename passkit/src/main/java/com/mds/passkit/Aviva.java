@@ -14,8 +14,8 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Properties;
 
-/**
- * Created by mradul on 07/03/16.
+/*
+ * Create dummy static pass Aviva pass for development
  */
 public class Aviva {
 
@@ -35,7 +35,7 @@ public class Aviva {
 	    		ex.printStackTrace();
     		}
    
-    	
+    	// Create Pass in pkpass file with signed certificates 
     	try {
             String resourcePath = properties.getProperty(PasskitConstants.Keys.RESOURCE_LOCATION_PATH);
             
@@ -68,8 +68,6 @@ public class Aviva {
                             new PassResource(resourcePath + "/strip@2x.png")
                     )
                     .passInformation(passInfo);
-            
-            System.out.println("Relevant Date: "+pass.relevantDate());
 
             String P12_CERTIFICATE_FILE_PATH = properties.getProperty(PasskitConstants.Keys.P12_CERTIFICATE_FILE_PATH);
             String APPLE_WWDRCA_FILE_PATH = properties.getProperty(PasskitConstants.Keys.APPLE_WWDRCA_FILE_PATH);
