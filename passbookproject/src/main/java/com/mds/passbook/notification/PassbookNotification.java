@@ -23,18 +23,19 @@ public class PassbookNotification {
 	
 	public void initialize(String token){
 		try {
-			
+			System.out.println(token);
 			// Request to push notification to Apple Push Notification Server 
 			
-			apnsClient = new ApnsClient<>(new File("logs/Certificates.p12"),"passbookapitestnext");
+			apnsClient = new ApnsClient<>(new File("logs/Certificates.p12"),"passbookapp");
 			apnsClient.setMetricsListener(new NotificationListner());
+			
+			System.out.println(ApnsClient.PRODUCTION_APNS_HOST);
+			
 			connectFuture = apnsClient.connect(ApnsClient.PRODUCTION_APNS_HOST);
 			connectFuture.await();
 			
 			builder = new ApnsPayloadBuilder();
-			
-			
-			SimpleApnsPushNotification notification = new SimpleApnsPushNotification(token,"pass.com.mds.passbookapitestnext", builder.buildWithDefaultMaximumLength());
+			SimpleApnsPushNotification notification = new SimpleApnsPushNotification(token,"pass.com.mds.passbookapp", builder.buildWithDefaultMaximumLength());
 			Future<PushNotificationResponse<SimpleApnsPushNotification>> sendNotificationFuture = apnsClient.sendNotification(notification);
 			
 			
@@ -75,7 +76,7 @@ public class PassbookNotification {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}finally{
-			final Future<Void> disconnectFuture = apnsClient.disconnect();
+			Future<Void> disconnectFuture = apnsClient.disconnect();
 			try {
 				disconnectFuture.await();
 			} catch (InterruptedException e) {

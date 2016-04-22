@@ -29,23 +29,60 @@ import com.mds.passkit.GeneratePass;
 public class PushNotificationController {
 	
 	public static final Logger logger = LoggerFactory.getLogger(PushNotificationController.class);
-	public static String token = "641e29475d7213c5b075268bb2bf5300f66e4c8f17a4a5b8fa2741c89edc57d3";
+	public static String token = "15c19c99888bed405f91785e4140b9f267c3f8fc191556ae562fb96ab31f83f4";
+	
 
-	@RequestMapping(value="/", method=RequestMethod.GET)
-	public String index(){
+	@RequestMapping(value="/serverStatus", method=RequestMethod.GET)
+	public String serverStatus(){
 		return "Server Working...";
+	}
+	
+	@RequestMapping(value="/downloadPass", method=RequestMethod.GET, produces="application/vnd.apple.pkpass")
+	public ResponseEntity<InputStreamResource> downloadPass (
+							   ) throws IOException{
+		long fileLength;
+		File newPass;
+		InputStream passInputStream;
+		HttpHeaders responseHeaders;
+		GeneratePass gp;
+	
+		responseHeaders = new HttpHeaders();
+		gp = new GeneratePass();
+		
+		try {
+			gp.createPass("passes/file3.pkpass", "222");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		newPass = new File("passes/file3.pkpass");
+		
+		fileLength = newPass.length();
+		passInputStream = new FileInputStream(newPass);
+
+		responseHeaders.add("Cache-Control", "no-cache, no-store, must-revalidate");
+		responseHeaders.add("Pragma", "no-cache");
+		responseHeaders.add("Expires", "0");
+		responseHeaders.setContentDispositionFormData("filename", "file1.pkpass");
+		responseHeaders.setLastModified(new Date().getTime());
+
+		return ResponseEntity
+	            .ok()
+	            .headers(responseHeaders)
+	            .contentLength(fileLength)
+	            .body(new InputStreamResource(passInputStream));
 	}
 	
 	@RequestMapping(value="/pushNotifications")
 	public void pushToken(){
-		
+		System.out.println("Token :>>"+token);
 		PassbookNotification pushNotification = new PassbookNotification();
 		pushNotification.initialize(token);
 
 	}
 	
 	@RequestMapping(value="/v1/devices/{deviceLibraryIdentifier}/registrations/{passTypeIdentifier}/{serialNumber}", method=RequestMethod.POST)
-	public ResponseEntity<Object> addPassbook(
+	public ResponseEntity<String> addPassbook(
 							   @PathVariable("deviceLibraryIdentifier") String deviceLibraryIdentifier,
 							   @PathVariable("passTypeIdentifier") String passTypeIdentifier,
 							   @PathVariable("serialNumber") String serialNumber,
@@ -56,7 +93,7 @@ public class PushNotificationController {
 	
 		token = payload.get("pushToken").toString();
 
-		return new ResponseEntity<Object>(HttpStatus.CREATED);
+		return new ResponseEntity<String>(HttpStatus.CREATED);
 	}
 	
 	@RequestMapping(value="/v1/devices/{deviceLibraryIdentifier}/registrations/{passTypeIdentifier}", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
@@ -65,7 +102,7 @@ public class PushNotificationController {
 							   @PathVariable("passTypeIdentifier") String passTypeIdentifier,
 							   @RequestParam(value="passesUpdatedSince", required=false) String passesUpdatedSince,
 							   @RequestBody(required=false) Map<String, Object> payload){
-		
+		System.out.println("In getSerialIdsOfPassForDevice");
 		logger.info("DeviceLib: {} >>> PassType: {}",deviceLibraryIdentifier, passTypeIdentifier); 
 		
 		if(passesUpdatedSince !=null){
@@ -74,10 +111,10 @@ public class PushNotificationController {
 		
 		logger.info("Request: {}", payload);
 	
-		return new ResponseEntity<String>("{\"serialNumbers\": [\"323323\"], \"lastUpdated\" : \""+new Timestamp(System.currentTimeMillis() - (30*60*1000))+"\"}", HttpStatus.OK);
+		return new ResponseEntity<String>("{\"serialNumbers\": [\"222\"], \"lastUpdated\" : \""+new Timestamp(System.currentTimeMillis() - (1000 * 60 * 60))+"\"}", HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/v1/passes/{passTypeIdentifier}/{serialNumber}", method=RequestMethod.GET, produces="application/vnd.apple.pkpass")
+	@RequestMapping(value="/v1/passes/{passTypeIdentifier}/{serialNumber}", method=RequestMethod.GET)
 	public ResponseEntity<InputStreamResource> updatePassbook (
 							   @PathVariable("passTypeIdentifier") String passTypeIdentifier,
 							   @PathVariable("serialNumber") String serialNumber,
@@ -87,20 +124,20 @@ public class PushNotificationController {
 		InputStream passInputStream;
 		HttpHeaders responseHeaders;
 		GeneratePass gp;
-		
+		System.out.println("Test");
 		logger.info("PassType: {} >>> SerialNo.: {}",passTypeIdentifier, serialNumber); 
 		logger.info("Request: {}", payload);
-		
+		System.out.println("In updatePassbook");
 		responseHeaders = new HttpHeaders();
 		gp = new GeneratePass();
 		
 		try {
-			gp.createPass("passes/testfiles.pkpass", "323323");
+			gp.createPass("passes/file3.pkpass", "222");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		newPass = new File("passes/testfiles.pkpass");
+		newPass = new File("passes/file3.pkpass");
 		
 		fileLength = newPass.length();
 		passInputStream = new FileInputStream(newPass);
@@ -108,7 +145,8 @@ public class PushNotificationController {
 		responseHeaders.add("Cache-Control", "no-cache, no-store, must-revalidate");
 		responseHeaders.add("Pragma", "no-cache");
 		responseHeaders.add("Expires", "0");
-		responseHeaders.setContentDispositionFormData("filename", "testfiles.pkpass");
+		responseHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+		responseHeaders.setContentDispositionFormData("filename", "file1.pkpass");
 		responseHeaders.setLastModified(new Date().getTime());
 
 		return ResponseEntity
@@ -119,16 +157,16 @@ public class PushNotificationController {
 	}
 	
 	@RequestMapping(value="/v1/devices/{deviceLibraryIdentifier}/registrations/{passTypeIdentifier}/{serialNumber}", method=RequestMethod.DELETE)
-	public ResponseEntity<Object> deletePassbook(
+	public ResponseEntity<String> deletePassbook(
 							   @PathVariable("deviceLibraryIdentifier") String deviceLibraryIdentifier,
 							   @PathVariable("passTypeIdentifier") String passTypeIdentifier,
 							   @PathVariable("serialNumber") String serialNumber,
-							   @RequestBody Map<String, Object> payload){
+							   @RequestBody(required=false) Map<String, Object> payload){
 		
 		logger.info("DeviceLib: {} >>> PassType: {} >>> SerialNo.: {}",deviceLibraryIdentifier, passTypeIdentifier, serialNumber); 
 		logger.info("Request: {}", payload);
 		
-		return new ResponseEntity<Object>(HttpStatus.OK);
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/v1/log", method=RequestMethod.POST)
