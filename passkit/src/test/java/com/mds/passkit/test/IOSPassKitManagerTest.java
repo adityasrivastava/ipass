@@ -11,6 +11,7 @@ import com.ryantenney.passkit4j.model.TextField;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Properties;
 
 public class IOSPassKitManagerTest {
@@ -22,10 +23,16 @@ public class IOSPassKitManagerTest {
       Aviva aviva = new Aviva();
       
       long unixTime = System.currentTimeMillis() / 1000L;
+      
+  	TextField changeField = new TextField("heading", "Head", ""+new Date().getTime());
+	changeField.changeMessage("Update with new Pass");
+	
+
 
       try {
-        aviva.generateStorePass("/Users/adityasrivastava/Desktop/file3.pkpass", "12345678912345678", "222",  new StoreCard()
-        	      .headerFields(new TextField("card", "card_label"))
+        aviva.generateStorePass("/Users/adityasrivastava/Desktop/file3.pkpass", "12345678912345678", "2221",  new StoreCard()
+//        	      .headerFields(new TextField("card", "card_label"))
+        			.headerFields(changeField)
         	      .auxiliaryFields(
         	              new TextField("name", "client_name", "Test Client"),
         	              new TextField("id", "client_id", ""+unixTime)

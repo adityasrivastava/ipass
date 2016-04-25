@@ -1,12 +1,16 @@
 package com.mds.passkit;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Properties;
 
 import com.mds.passkit.exception.PasskitException;
 import com.mds.passkit.pass.container.StorePassContainer;
 import com.mds.passkit.utils.PassKitUtils;
+import com.ryantenney.passkit4j.model.Barcode;
+import com.ryantenney.passkit4j.model.BarcodeFormat;
 import com.ryantenney.passkit4j.model.EventTicket;
+import com.ryantenney.passkit4j.model.Field;
 import com.ryantenney.passkit4j.model.Generic;
 import com.ryantenney.passkit4j.model.StoreCard;
 import com.ryantenney.passkit4j.model.TextField;
@@ -26,9 +30,16 @@ public class GeneratePass {
 		long unixTime = System.currentTimeMillis() / 1000L;
 		Aviva aviva = new Aviva();
 		
+		TextField changeField = new TextField("heading", "Head", ""+new Date().getTime());
+		changeField.changeMessage("Update with new Pass");
+		
+		
+		
+		
 	      try {
 	        aviva.generateStorePass(passLocation, "12345678912345678", serialNumber,  new StoreCard()
-	        	      .headerFields(new TextField("card", "card_label"))
+//	        		   .headerFields(new TextField("card", "card_label"))
+	        	      .headerFields(changeField)
 	        	      .auxiliaryFields(
 	        	              new TextField("name", "client_name", "Test Client"),
 	        	              new TextField("id", "client_id", ""+unixTime)

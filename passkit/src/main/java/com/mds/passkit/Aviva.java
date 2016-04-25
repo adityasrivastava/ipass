@@ -43,7 +43,7 @@ public class Aviva {
             location.latitude(28.6139);
             location.longitude(77.2090);
             location.relevantText("Hi this is test message");
-
+            Barcode barcode = new Barcode(BarcodeFormat.PDF417, "12122");
             Pass pass = new Pass()
                     .teamIdentifier(properties.getProperty(PasskitConstants.Keys.TEAM_IDENTIFIER))
                     .passTypeIdentifier(properties.getProperty(PasskitConstants.Keys.PASS_TYPE_IDENTIFIER))
@@ -56,8 +56,8 @@ public class Aviva {
                     .foregroundColor(Color.BLACK)
                     .backgroundColor(new Color(254, 220, 56))
                     .relevantDate(new Date())
-                    .description("Just Updating and Testing")
-                    
+                    .description("Aviva Pass")
+                    .barcode(barcode)
                     .files(
                             new PassResource("en.lproj/pass.strings", new File(resourcePath + "/en.lproj/pass.strings")),
                             new PassResource(resourcePath + "/icon.png"),
