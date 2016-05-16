@@ -23,7 +23,7 @@ public class GeneratePass {
 	private Properties properites;
 	private StorePassContainer storeCardPass;
 	
-	public void createPass(String passLocation, String serialNumber) throws IOException{
+	public void createPass(String passLocation, String serialNumber, String name, String age, String gender) throws IOException{
 		
 		properites = PassKitUtils.getProperties();
 		
@@ -32,16 +32,15 @@ public class GeneratePass {
 		
 		TextField changeField = new TextField("heading", "Head", ""+new Date().getTime());
 		changeField.changeMessage("Update with new Pass");
-		
-		
-		
-		
+
 	      try {
 	        aviva.generateStorePass(passLocation, "12345678912345678", serialNumber,  new StoreCard()
 //	        		   .headerFields(new TextField("card", "card_label"))
 	        	      .headerFields(changeField)
+	        	      .primaryFields(new TextField("age", age),
+	        	    		  new TextField("gender", gender))
 	        	      .auxiliaryFields(
-	        	              new TextField("name", "client_name", "Test Client"),
+	        	              new TextField("name", "client_name", name),
 	        	              new TextField("id", "client_id", ""+unixTime)
 	        	      )
 	        	      .backFields(

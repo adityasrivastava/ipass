@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MimeType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,12 +38,21 @@ public class PushNotificationController {
 	public static final Logger logger = LoggerFactory.getLogger(PushNotificationController.class);
 	public static String token = "15c19c99888bed405f91785e4140b9f267c3f8fc191556ae562fb96ab31f83f4";
 	
+	private static String username;
+	private static String userAge;
+	private static String userGender;
+	
 	/**
 	 * Check Server status
 	 */
-	@RequestMapping(value="/serverStatus", method=RequestMethod.GET)
+	@RequestMapping(value="/serverStatus", method=RequestMethod.GET, produces="text/html")
 	public String serverStatus(){
 		return "Server Working...";
+	}
+	
+	@RequestMapping(value="/updatePage")
+	public String updatePage(){
+		return "update";
 	}
 	
 	/**
@@ -53,8 +63,10 @@ public class PushNotificationController {
 	 */
 	
 	@RequestMapping(value="/downloadPass", method=RequestMethod.GET, produces="application/vnd.apple.pkpass")
-	public ResponseEntity<InputStreamResource> downloadPass (
+	public ResponseEntity<InputStreamResource> downloadPass (@RequestParam(name="name") String name,
+							@RequestParam(name="age") String age, @RequestParam(name="gender") String gender
 							   ) throws IOException{
+
 		long fileLength;
 		File newPass;
 		InputStream passInputStream;
@@ -64,11 +76,15 @@ public class PushNotificationController {
 		responseHeaders = new HttpHeaders();
 		generatePass = new GeneratePass();
 		
+		username = name;
+		userAge = age;
+		userGender = gender;
+		
 		logger.info("Downloading Pass.....");
 		
 		// Create Pass
 		try {
-			generatePass.createPass("passes/file3.pkpass", "222");
+			generatePass.createPass("passes/file3.pkpass", "2221", name, age, gender);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -160,7 +176,7 @@ public class PushNotificationController {
 		
 		logger.debug("Request: {}", payload);
 	
-		return new ResponseEntity<String>("{\"serialNumbers\": [\"222\"], \"lastUpdated\" : \""+new Timestamp(System.currentTimeMillis() - (1000 * 60 * 60))+"\"}", HttpStatus.OK);
+		return new ResponseEntity<String>("{\"serialNumbers\": [\"2221\"], \"lastUpdated\" : \""+new Timestamp(System.currentTimeMillis() - (1000 * 60 * 60))+"\"}", HttpStatus.OK);
 	}
 	
 	/**
@@ -190,7 +206,7 @@ public class PushNotificationController {
 		
 		// Create Pass
 		try {
-			gp.createPass("passes/file3.pkpass", "222");
+			gp.createPass("passes/file3.pkpass", "2221", username, userAge, userGender);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -206,7 +222,7 @@ public class PushNotificationController {
 		responseHeaders.add("Pragma", "no-cache");
 		responseHeaders.add("Expires", "0");
 		responseHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-		responseHeaders.setContentDispositionFormData("filename", "file1.pkpass");
+		responseHeaders.setContentDispositionFormData("filename", "file3.pkpass");
 		responseHeaders.setLastModified(new Date().getTime());
 
 		// Send in response
@@ -245,7 +261,7 @@ public class PushNotificationController {
 	public void logPassbookErrors(
 							   @RequestBody Map<String, Object> payload){
 		
-		logger.debug("Request: {}", payload);
+		logger.info("Request: {}", payload);
 
 	}
 }
