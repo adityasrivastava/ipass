@@ -33,7 +33,7 @@ import com.mds.passkit.GeneratePass;
  *
  */
 @RestController
-public class PushNotificationController {
+public class PushNotificationController{
 	
 	public static final Logger logger = LoggerFactory.getLogger(PushNotificationController.class);
 	public static String token = "15c19c99888bed405f91785e4140b9f267c3f8fc191556ae562fb96ab31f83f4";
@@ -41,6 +41,7 @@ public class PushNotificationController {
 	private static String username;
 	private static String userAge;
 	private static String userGender;
+	
 	
 	/**
 	 * Check Server status
@@ -50,11 +51,16 @@ public class PushNotificationController {
 		return "Server Working...";
 	}
 	
-	@RequestMapping(value="/updatePage")
-	public String updatePage(){
-		return "update";
+	@RequestMapping(value="/passbookStatus", produces="text/html")
+	public String passbookStatus(){
+		return PassbookStatus.getInstance().getUpdateStatus().toString();
 	}
 	
+	@RequestMapping(value="/changeStatus")
+	public void changeStatus(){
+		PassbookStatus.getInstance().setUpdateStatus(false);
+	}
+
 	/**
 	 * Download new pass 
 	 * 
@@ -63,8 +69,8 @@ public class PushNotificationController {
 	 */
 	
 	@RequestMapping(value="/downloadPass", method=RequestMethod.GET, produces="application/vnd.apple.pkpass")
-	public ResponseEntity<InputStreamResource> downloadPass (@RequestParam(name="name") String name,
-							@RequestParam(name="age") String age, @RequestParam(name="gender") String gender
+	public ResponseEntity<InputStreamResource> downloadPass (@RequestParam(name="name", required=false) String name,
+							@RequestParam(name="age", required=false) String age, @RequestParam(name="gender", required=false) String gender
 							   ) throws IOException{
 
 		long fileLength;
@@ -72,7 +78,7 @@ public class PushNotificationController {
 		InputStream passInputStream;
 		HttpHeaders responseHeaders;
 		GeneratePass generatePass;
-	
+
 		responseHeaders = new HttpHeaders();
 		generatePass = new GeneratePass();
 		
@@ -101,7 +107,7 @@ public class PushNotificationController {
 		responseHeaders.add("Expires", "0");
 		responseHeaders.setContentDispositionFormData("filename", "file1.pkpass");
 		responseHeaders.setLastModified(new Date().getTime());
-
+	
 		// Send in response
 		return ResponseEntity
 	            .ok()
@@ -116,10 +122,10 @@ public class PushNotificationController {
 	 */
 	@RequestMapping(value="/pushNotifications")
 	public void pushToken(){
-		
+
 		PassbookNotification pushNotification = new PassbookNotification();
 		pushNotification.initialize(token);
-		
+		PassbookStatus.getInstance().setUpdateStatus(false);
 		logger.info("Push notification initiated....");
 
 	}
@@ -143,7 +149,7 @@ public class PushNotificationController {
 		logger.info("Adding Passbook......");
 		logger.debug("DeviceLib: {} >>> PassType: {} >>> SerialNo.: {}",deviceLibraryIdentifier, passTypeIdentifier, serialNumber); 
 		logger.debug("Request: {}", payload);
-	
+		PassbookStatus.getInstance().setUpdateStatus(true);
 		token = payload.get("pushToken").toString();
 
 		return new ResponseEntity<String>(HttpStatus.CREATED);
@@ -200,10 +206,10 @@ public class PushNotificationController {
 		logger.info("Generating pass for update response....");
 		logger.debug("PassType: {} >>> SerialNo.: {}",passTypeIdentifier, serialNumber); 
 		logger.debug("Request: {}", payload);
-	
+		PassbookStatus.getInstance().setUpdateStatus(true);
 		responseHeaders = new HttpHeaders();
 		gp = new GeneratePass();
-		
+
 		// Create Pass
 		try {
 			gp.createPass("passes/file3.pkpass", "2221", username, userAge, userGender);

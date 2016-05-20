@@ -1,0 +1,105 @@
+<html>
+
+<head>
+	<title>Passbook Sample Page</title>
+	<script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.5/angular.js"></script>
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.fileDownload/1.4.2/jquery.fileDownload.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2014-11-29/FileSaver.min.js"></script>
+	<script type="text/javascript" src="app/app.js"></script>
+
+	<script>
+	var updatePage = false;
+
+	</script>
+	<style type="text/css">
+		label{
+			font-size: 20px;
+			color: white;
+		}
+
+		h1{
+			color: white;
+		}
+		body{
+			background-color: #CBE32D;
+		}
+	</style>
+</head>	
+
+<body >
+	<div class="container-fluid" ng-app="passbookApp">
+
+		<div class="main-content col-sm-12" ng-controller="passbookCtrl">
+
+			<div class="row">
+		<!-- 		<div class="col-sm-1">
+					<img src="images/us/web/Add_to_Apple_Wallet_rgb_US-UK.svg" class="img-thumbnail" height="300" width="300">
+				</div> -->
+
+				<div class="col-sm-7">
+					<h1>Apple Passbook Web Application</h1>
+				</div>
+			</div>
+
+			<div class="name-container row">
+				<div class="name-label col-sm-2">
+					<label>Name</label>
+				</div>
+
+				<div class="name-input-box col-sm-3">
+					<input name="name" ng-model="user.name">
+				</div>	
+			</div>
+
+
+			<div class="age-container row">
+				<div class="age-label col-sm-2">
+					<label>Age</label>
+				</div>
+
+				<div class="age-input-box col-sm-3">
+					<input name="age" ng-model="user.age">
+				</div>	
+			</div>
+
+
+
+
+			<div class="gender-container row">
+				<div class="gender-label col-sm-2">
+					<label>Gender</label>
+				</div>
+				<div class="gender-input-box col-sm-2">
+					<select class="form-control" name="gender" ng-model="user.gender" ng-options="gender.value as gender.value for gender in genders" >
+					</select>
+				</div>	
+			</div>
+
+			<br/>
+			<div class="submit-container row">
+				<div class="submit-button col-sm-1">
+					<a class="btn btn-primary" ng-href="{{createPassbook()}}" name="create" download>Create</a>
+				</div>
+				<div class="clear-button col-sm-1">
+					<button class="btn btn-primary" name="clear" ng-click="clearPassbook()">Clear</button>
+				</div>
+			</div>
+
+			<div class="error-message row">
+				<div class="col-sm-2" style="color: #D04545;">
+					{{error}}
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+
+
+</body>
+
+<html>
