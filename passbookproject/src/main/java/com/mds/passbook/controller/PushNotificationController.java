@@ -41,6 +41,9 @@ public class PushNotificationController{
 	private static String username;
 	private static String userAge;
 	private static String userGender;
+	private static String holeType;
+	private static String hole;
+	private static String score;
 	
 	
 	/**
@@ -70,7 +73,12 @@ public class PushNotificationController{
 	
 	@RequestMapping(value="/downloadPass", method=RequestMethod.GET, produces="application/vnd.apple.pkpass")
 	public ResponseEntity<InputStreamResource> downloadPass (@RequestParam(name="name", required=false) String name,
-							@RequestParam(name="age", required=false) String age, @RequestParam(name="gender", required=false) String gender
+							@RequestParam(name="age", required=false) String age, 
+							@RequestParam(name="gender", required=false) String gender,
+							@RequestParam(name="golf_course", required=false) String golf_course,
+							@RequestParam(name="hole_type", required=false) String hole_type,
+							@RequestParam(name="tee_type", required=false) String tee_type,
+							@RequestParam(name="handicap", required=false) String handicap
 							   ) throws IOException{
 
 		long fileLength;
@@ -85,12 +93,13 @@ public class PushNotificationController{
 		username = name;
 		userAge = age;
 		userGender = gender;
+		holeType = hole_type;
 		
 		logger.info("Downloading Pass.....");
 		
 		// Create Pass
 		try {
-			generatePass.createPass("passes/file3.pkpass", "2221", name, age, gender);
+			generatePass.createGenericPass("passes/file3.pkpass", "2221", name, age, gender,hole_type, "Hole 1", "0");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -121,8 +130,11 @@ public class PushNotificationController{
 	 * devices with registerd passes
 	 */
 	@RequestMapping(value="/pushNotifications")
-	public void pushToken(){
-
+	public void pushToken(@RequestParam(name="hole", required=false) String hole, @RequestParam(name="score", required=false) String score){
+		
+		this.hole = hole;
+		this.score = score;
+		
 		PassbookNotification pushNotification = new PassbookNotification();
 		pushNotification.initialize(token);
 		PassbookStatus.getInstance().setUpdateStatus(false);
@@ -150,8 +162,9 @@ public class PushNotificationController{
 		logger.debug("DeviceLib: {} >>> PassType: {} >>> SerialNo.: {}",deviceLibraryIdentifier, passTypeIdentifier, serialNumber); 
 		logger.debug("Request: {}", payload);
 		PassbookStatus.getInstance().setUpdateStatus(true);
+	
 		token = payload.get("pushToken").toString();
-
+		logger.info("Push Token {}", token);
 		return new ResponseEntity<String>(HttpStatus.CREATED);
 	}
 	
@@ -212,7 +225,7 @@ public class PushNotificationController{
 
 		// Create Pass
 		try {
-			gp.createPass("passes/file3.pkpass", "2221", username, userAge, userGender);
+			gp.createGenericPass("passes/file3.pkpass", "2221", username, userAge, userGender, holeType, hole, score);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

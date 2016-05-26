@@ -9,7 +9,7 @@ public class ViewController {
 	
 	@RequestMapping(value="/update", method = RequestMethod.GET)
 	public String update(){
-		PassbookStatus.getInstance().setUpdateStatus(true);
+		PassbookStatus.getInstance().setUpdateStatus(false);
 		return "update";
 	}
 }

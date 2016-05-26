@@ -1,6 +1,7 @@
 <html>
 
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
 	<title>Passbook Sample Page</title>
 	<script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
@@ -17,6 +18,9 @@
 	<style type="text/css">
 		label{
 			font-size: 20px;
+			color: white;
+		}
+		h3{
 			color: white;
 		}
 
@@ -43,6 +47,49 @@
 					<h1>Apple Passbook Web Application</h1>
 				</div>
 			</div>
+
+			<div class="golf-course-container row">
+				<div class="golf-course-label col-sm-2">
+					<label>Gold Course</label>
+				</div>
+
+				<div class="golf-course-input-box col-sm-2">
+					<select class="form-control" name="gold_course" ng-model="user.golf_course" ng-options="course.value as course.value for course in data_properties.golf_course_list"> </select>
+				</div>	
+			</div>
+
+			<div class="row">
+
+				<div class="col-sm-4">
+
+					<h3>Choose Game:</h3>
+
+				</div>
+
+			</div>
+
+
+
+			<div class="hole-type-container row">
+				<div class="hole-type-label col-sm-2">
+					<label>Hole Type:</label>
+				</div>
+
+				<div class="hole-type-input-box col-sm-2">
+					<select class="form-control" name="hole_type" ng-model="user.hole_type" ng-options="hole_type.value as hole_type.value for hole_type in data_properties.hole_type_list"></select>
+				</div>	
+			</div>
+
+			<div class="tee-type-container row">
+				<div class="tee-type-label col-sm-2">
+					<label>Tee Type:</label>
+				</div>
+
+				<div class="tee-type-input-box col-sm-2">
+					<select class="form-control" name="tee_type" ng-model="user.tee_type" ng-options="tee_type.value as tee_type.value for tee_type in data_properties.tee_type_list"></select>
+				</div>	
+			</div>
+
 
 			<div class="name-container row">
 				<div class="name-label col-sm-2">
@@ -73,8 +120,19 @@
 					<label>Gender</label>
 				</div>
 				<div class="gender-input-box col-sm-2">
-					<select class="form-control" name="gender" ng-model="user.gender" ng-options="gender.value as gender.value for gender in genders" >
+					<select class="form-control" name="gender" ng-model="user.gender" ng-options="gender.value as gender.value for gender in data_properties.genders" >
 					</select>
+				</div>	
+			</div>
+
+
+			<div class="handicap-container row">
+				<div class="handicap-label col-sm-2">
+					<label>Handicap</label>
+				</div>
+
+				<div class="handicap-input-box col-sm-3">
+					<input name="handicap" ng-model="user.handicap">
 				</div>	
 			</div>
 
@@ -83,6 +141,10 @@
 				<div class="submit-button col-sm-1">
 					<a class="btn btn-primary" ng-href="{{createPassbook()}}" name="create" download>Create</a>
 				</div>
+<!-- 
+				<div class="submit-button col-sm-1">
+					<a class="btn btn-primary" ng-click="createPassbook1()" name="create" download>Create1</a>
+				</div> -->
 				<div class="clear-button col-sm-1">
 					<button class="btn btn-primary" name="clear" ng-click="clearPassbook()">Clear</button>
 				</div>

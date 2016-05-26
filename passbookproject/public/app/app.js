@@ -1,6 +1,6 @@
 var app = angular.module("passbookApp", []);
 
-app.controller("passbookCtrl",function($scope, $http, $location,  $interval){
+app.controller("passbookCtrl",function($scope, $http, $location, $document, $window,  $interval){
 
 	$scope.update = "";
 
@@ -8,25 +8,92 @@ app.controller("passbookCtrl",function($scope, $http, $location,  $interval){
 		id: 0,
 		name: "",
 		age: "",
-		gender: ""
+		gender: "",
+		golf_course: "",
+		hole_type: "",
+		tee_type: "",
+		handicap: "",
+		par: "",
+		score: ""
 	};
 
-	$scope.genders = [
-		{
-			id: 0,
-		 	value: "Male"
-		},
-		{
-			id: 1,
-			value: "Female"
+	$scope.data_properties = {
+		genders : [
+			{
+				id: 0,
+			 	value: "Male"
+			},
+			{
+				id: 1,
+				value: "Female"
+			}
+		],
+		golf_course_list: [
+			{
+				id: 0,
+				value: "Golf Course 1"
+			},
+			{
+				id: 1,
+				value: "Golf Course 2"
+			},
+			{
+				id: 3,
+				value: "Golf Course 3"
+			}
+		],
+		hole_type_list: [
+			{
+				id: 0,
+				value: "Hole 9"
+			},
+			{
+				id: 1,
+				value: "Hole 18"
+			}
+		],
+		tee_type_list: [
+			{
+				id: 0,
+				value: "Red"
+			},
+			{
+				id: 1,
+				value: "Green"
+			},
+			{
+				id: 2,
+				value: "Blue"
+			},
+			{
+				id: 3,
+				value: "White"
+			}
+		]
+
+		hole_list : function(){
+			var returnValue = new Array();
+			var count = 0;
+			while(count < 18){
+				returnValue[count] = count++;
+			}
+
+			return returnValue;
 		}
-	];
+	}
+
+
+	function init(){
+		$http.get("/changeStatus").then(function(response){
+			console.log("Change status reset");
+		})
+	}
 
 	$scope.updatePassbook =function(){
 
 			$scope.update = "";
 
-		var pushUrl="/pushNotifications";
+		var pushUrl="/pushNotifications?hole="+$scope.user.hole+"&score="+$scope.user.score;
 
 		$http.get(pushUrl).then(function(response){
 				$scope.update = "Pust Notification Successful";
@@ -47,13 +114,14 @@ app.controller("passbookCtrl",function($scope, $http, $location,  $interval){
 
 	function checkPassbookStatus(){
 			$http.get("/passbookStatus").success(function(response){
-				 console.log(response);
 
 				if(Boolean(response === 'true')){
-					window.location.href="/update";
+			
+					// window.location.href="/update";
 				}
 			});
 	}
+
 	$scope.createPassbook = function(){
 
 		if($scope.user.name === "" || $scope.user.age === "" || $scope.user.gender === "" ){
@@ -61,7 +129,13 @@ app.controller("passbookCtrl",function($scope, $http, $location,  $interval){
 			return;
 		}
 
-		$scope.urlPath ="/downloadPass?name="+$scope.user.name+"&age="+$scope.user.age+"&gender="+$scope.user.gender;
+		$scope.urlPath ="/downloadPass?name="+$scope.user.name
+							+"&age="+$scope.user.age
+							+"&gender="+$scope.user.gender
+							+"&golf_course="+$scope.user.golf_course
+							+"&hole_type="+$scope.user.hole_type
+							+"&tee_type="+$scope.user.tee_type
+							+"&handicap="+$scope.user.handicap;
 
 		return $scope.urlPath;
 

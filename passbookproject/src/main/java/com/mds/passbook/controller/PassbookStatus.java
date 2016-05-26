@@ -14,11 +14,11 @@ public class PassbookStatus {
 	}
 
 	public static Boolean getUpdateStatus() {
-		return updateStatus;
+		return instance.updateStatus;
 	}
 
 	public static void setUpdateStatus(Boolean updateStatus) {
-		PassbookStatus.updateStatus = updateStatus;
+		instance.updateStatus = updateStatus;
 	}
 
 }
