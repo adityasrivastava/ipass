@@ -1,6 +1,8 @@
 package com.mds.passbook;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import com.mds.passbook.repo.model.GolfHoles;
 import com.mds.passbook.repo.model.GolfPass;
 import com.mds.passbook.repo.model.GolfScore;
 import com.mds.passbook.repo.model.GolfTee;
+import com.mds.passbook.repo.model.GolfTeeDetails;
 import com.mds.passbook.repo.model.GolfUser;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -123,107 +126,154 @@ public class RepositoryTest {
 		
 		GolfTee gTee = new GolfTee();
 		gTee.setColor("Red");
-		gTee.setPar(3);
-		gTee.setYards(100);
+		
+		GolfTeeDetails teeDetails = new GolfTeeDetails();
+		teeDetails.setPar(1);
+		teeDetails.setStroke(1);
+		teeDetails.setYards(1);
+		teeDetails.setGolfTee(gTee);
+		
+		GolfTeeDetails teeDetails2 = new GolfTeeDetails();
+		teeDetails2.setPar(1);
+		teeDetails2.setStroke(1);
+		teeDetails2.setYards(1);
+		teeDetails2.setGolfTee(gTee);
+		
+		gTee.getTeeDetails().add(teeDetails);
+		gTee.getTeeDetails().add(teeDetails2);
 	
 		golfTeeRepo.save(gTee);
 	}
 	
 	@org.junit.Test
 	public void mainTest(){
-		// Create user ....
+		// Create Golf Course
+		GolfCourse gCourse = new GolfCourse();
+		gCourse.setCourseName("GolfCourse 1");
+		golfCourseRepo.save(gCourse);
+		
+		GolfCourse gCourse1 = new GolfCourse();
+		gCourse1.setCourseName("GolfCourse 2");
+		golfCourseRepo.save(gCourse1);
 		
 		
+		// Create golf holes
+		
+		GolfHoles gHoles = new GolfHoles();
+		gHoles.setHoles(9);
+		
+		GolfHoles gHoles1 = new GolfHoles();
+		gHoles1.setHoles(18);
+		
+		golfHolesRepo.save(gHoles);
+		golfHolesRepo.save(gHoles1);
+		
+		// Create pass 
+		
+		GolfPass pass = new GolfPass();
+		pass.setPassAdded(true);
+		pass.setToken("ABC=XYZ");
+		
+		GolfPass pass2 = new GolfPass();
+		pass2.setPassAdded(true);
+		pass2.setToken("ABC=XYZ1");
+	
+		// Create golf User
 		GolfUser gUser = new GolfUser();
 		gUser.setAge(1);
 		gUser.setGender("MALE");
 		gUser.setHandicap(20);
 		gUser.setName("Aditya");
+		gUser.setPass(pass);
 		
-		GolfPass gPass = new GolfPass();
-		gPass.setPassAdded(true);
-		gPass.setToken("XYZ");
+		GolfUser gUser1 = new GolfUser();
+		gUser1.setAge(1);
+		gUser1.setGender("MALE");
+		gUser1.setHandicap(10);
+		gUser1.setName("Aditya2");
+		gUser1.setPass(pass2);
 		
-		gUser.setPass(gPass);
-		
+		golfUserRepo.save(gUser1);
 		golfUserRepo.save(gUser);
 		
-		
-		// Create Game ....golf...lets play golf. :D
-		
-		GolfCourse gCourse = new GolfCourse();
-		gCourse.setCourseName("GolfCourse 1");
-		
-		golfCourseRepo.save(gCourse);
-		
-		GolfCourse gCourse1 = new GolfCourse();
-		gCourse1.setCourseName("GolfCourse 2");
-		
-		golfCourseRepo.save(gCourse1);
-
-		
-		GolfHoles gHoles = new GolfHoles();
-		gHoles.setHoles(9);
-		golfHolesRepo.save(gHoles);
-		
-		GolfHoles gHoles1 = new GolfHoles();
-		gHoles1.setHoles(18);
-		golfHolesRepo.save(gHoles1);
-		
+		// Create golf tee
 		
 		GolfTee gTee = new GolfTee();
 		gTee.setColor("Red");
-		gTee.setPar(3);
-		gTee.setYards(100);
+		
+		GolfTeeDetails teeDetails = new GolfTeeDetails();
+		teeDetails.setPar(1);
+		teeDetails.setStroke(1);
+		teeDetails.setYards(1);
+		teeDetails.setGolfTee(gTee);
+		
+		GolfTeeDetails teeDetails2 = new GolfTeeDetails();
+		teeDetails2.setPar(1);
+		teeDetails2.setStroke(1);
+		teeDetails2.setYards(1);
+		teeDetails2.setGolfTee(gTee);
+		
+		gTee.getTeeDetails().add(teeDetails);
+		gTee.getTeeDetails().add(teeDetails2);
 	
 		golfTeeRepo.save(gTee);
-		
-		
-		GolfTee gTee1 = new GolfTee();
-		gTee1.setColor("Black");
-		gTee1.setPar(3);
-		gTee1.setYards(100);
 	
-		golfTeeRepo.save(gTee);
+
 		
+		// Default Score
+		Golf addGolf = new Golf();
 		
+		List<GolfScore> score = new ArrayList<>();
 		GolfScore gScore = new GolfScore();
 		gScore.setHoleNumber(1);
 		gScore.setScore(10);
-		
-		golfScoreRepo.save(gScore);
+		gScore.setGolf(addGolf);
 		
 		GolfScore gScore1 = new GolfScore();
-		gScore1.setHoleNumber(1);
+		gScore1.setHoleNumber(2);
 		gScore1.setScore(10);
-		
-		golfScoreRepo.save(gScore1);
+		gScore1.setGolf(addGolf);
 		
 		GolfScore gScore2 = new GolfScore();
-		gScore2.setHoleNumber(1);
+		gScore2.setHoleNumber(3);
 		gScore2.setScore(10);
+		gScore2.setGolf(addGolf);
 		
-		golfScoreRepo.save(gScore2);
+		score.add(gScore);
+		score.add(gScore1);
+		score.add(gScore2);
 		
+		// Save golf
+
+		addGolf.setHoleTypesId(gHoles);
+		addGolf.setGolfCoursesId(gCourse1);
+		addGolf.setUsersId(gUser);
+		addGolf.setTeeTypesId(gTee);
+		addGolf.setScoresId(score);
+		golfRepo.save(addGolf);
 		
-		Golf golf = new Golf();
-		
-		golf.setGolfCoursesId(gCourse);
-		golf.setHoleTypesId(gHoles);
-		golf.setTeeTypesId(gTee);
-		golf.setUsersId(gUser);
-		golf.getScoresId().add(gScore);
-		golf.getScoresId().add(gScore1);
-		golf.getScoresId().add(gScore2);
-		
-		golfRepo.save(golf);
-		
+		// Read Golf
 		Golf newGolf = new Golf();
-		Golf find = golfRepo.findOne(1);
+		GolfCourse g = new GolfCourse();
+		g.setGolfCourseId(2);
+		Golf find = golfRepo.findByGolfCoursesId(g);
 		
-		System.out.println(find);
 		
+		// Read Golf score 
+		Golf gc = new Golf();
+		gc.setId(1);
+		List<GolfScore> readScore = golfScoreRepo.findByGolf(gc);
 		
+		for(GolfScore gm: readScore){
+			System.out.println("SCore: "+gm);
+		}
+	
+		
+		System.out.println(find.getId()+" - "+find);
+//		
+//		Golf golf1 = new Golf();
+//		golf1.setId(1);
+//		golfRepo.delete(1);
 	}
 	
 }

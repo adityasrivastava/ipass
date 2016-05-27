@@ -28,46 +28,47 @@ public class Golf extends AbstractDateStampEntity implements Serializable{
 	@Column(name="GOLF_ID")
 	private int id;
 	
-	@ManyToOne(cascade=CascadeType.MERGE)
-	@JoinTable(
-				name="GOLF_USERS",
-				joinColumns=@JoinColumn(name="GOLF_ID"), 
-				inverseJoinColumns=@JoinColumn(name="USER_ID")
-				)
+	@ManyToOne
+	@JoinColumn(name="GOLF_USER",
+				foreignKey=@ForeignKey(name="GOLF_USER_FK"))
+//	@JoinTable(
+//				name="GOLF_USERS",
+//				joinColumns=@JoinColumn(name="GOLF_ID"), 
+//				inverseJoinColumns=@JoinColumn(name="USER_ID")
+//				)
 	private GolfUser usersId;
 	
-	@ManyToOne(cascade=CascadeType.MERGE)
-	@JoinTable(
-				name="GOLF_COURSES",
-				joinColumns=@JoinColumn(name="GOLF_ID"), 
-				inverseJoinColumns=@JoinColumn(name="COURSE_ID")
-				)
+	@ManyToOne
+	@JoinColumn(name="GOLF_COURSE",
+				foreignKey=@ForeignKey(name="GOLF_COURSE_FK"))
+//	@JoinTable(
+//				name="GOLF_COURSES",
+//				joinColumns=@JoinColumn(name="GOLF_ID"), 
+//				inverseJoinColumns=@JoinColumn(name="COURSE_ID")
+//				)
 	private GolfCourse golfCoursesId;
 	
-	@ManyToOne(cascade=CascadeType.MERGE)
-	@JoinTable(
-				name="GOLF_HOLE_TYPES",
-				joinColumns=@JoinColumn(name="GOLF_ID"), 
-				inverseJoinColumns=@JoinColumn(name="HOLE_TYPE_ID")
-				)
+	@ManyToOne
+	@JoinColumn(name="GOLF_HOLE",
+				foreignKey=@ForeignKey(name="GOLF_HOLE_FK"))
+//	@JoinTable(
+//				name="GOLF_HOLE_TYPES",
+//				joinColumns=@JoinColumn(name="GOLF_ID"), 
+//				inverseJoinColumns=@JoinColumn(name="HOLE_TYPE_ID")
+//				)
 	private GolfHoles holeTypesId;
 	
-	@ManyToOne(cascade=CascadeType.MERGE)
-	@JoinTable(
-				name="GOLF_TEE_TYPES",
-				joinColumns=@JoinColumn(name="GOLF_ID"), 
-				inverseJoinColumns=@JoinColumn(name="TEE_TYPE_ID")
-				)
+	@OneToOne
+	@JoinColumn(name="GOLF_TEE")
 	private GolfTee teeTypesId;
 	
 	
-	@OneToMany(mappedBy="golf", cascade=CascadeType.MERGE)
+	@OneToMany(mappedBy="golf", cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<GolfScore> scoresId = new ArrayList<GolfScore>();
 
 	public Golf(){
 		
 	}
-
 
 	public List<GolfScore> getScoresId() {
 		return scoresId;
@@ -112,7 +113,7 @@ public class Golf extends AbstractDateStampEntity implements Serializable{
 	@Override
 	public String toString() {
 		return "Golf [id=" + id + ", usersId=" + usersId + ", golfCoursesId=" + golfCoursesId + ", holeTypesId="
-				+ holeTypesId + ", teeTypesId=" + teeTypesId + ", scoresId=" + scoresId + "]";
+				+ holeTypesId + ", teeTypesId=" + teeTypesId + "]";
 	}
 	
 	

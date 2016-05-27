@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,14 +18,14 @@ import javax.persistence.OneToMany;
 public class GolfCourse extends AbstractDateStampEntity implements Serializable{
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="GOLF_COURSE_ID")
 	private int golfCourseId;
 	
 	@Column(name="COURSE_NAME")
 	private String courseName;
 	
-	@OneToMany(mappedBy="golfCoursesId")
+	@OneToMany(mappedBy="golfCoursesId", cascade = CascadeType.ALL, orphanRemoval=true)
 	private List<Golf> golf = new ArrayList<Golf>();
 	
 	public String getCourseName() {
@@ -32,12 +34,12 @@ public class GolfCourse extends AbstractDateStampEntity implements Serializable{
 	public void setCourseName(String courseName) {
 		this.courseName = courseName;
 	}
-	public List<Golf> getGolf() {
-		return golf;
-	}
-	public void setGolf(List<Golf> golf) {
-		this.golf = golf;
-	}
+//	public List<Golf> getGolf() {
+//		return golf;
+//	}
+//	public void setGolf(List<Golf> golf) {
+//		this.golf = golf;
+//	}
 	public int getGolfCourseId() {
 		return golfCourseId;
 	}
@@ -46,7 +48,7 @@ public class GolfCourse extends AbstractDateStampEntity implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "GolfCourse [golfCourseId=" + golfCourseId + ", courseName=" + courseName + ", golf=" + golf + "]";
+		return "GolfCourse [golfCourseId=" + golfCourseId + ", courseName=" + courseName + "]";
 	}
 
 }

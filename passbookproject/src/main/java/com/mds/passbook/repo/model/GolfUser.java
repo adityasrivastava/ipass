@@ -37,12 +37,12 @@ public class GolfUser extends AbstractDateStampEntity implements Serializable{
 	@Column(name="HANDICAP")
 	private int handicap;
 	
-	@OneToOne(cascade=CascadeType.PERSIST)
+	@OneToOne(cascade=CascadeType.ALL, orphanRemoval=true)
 	@JoinColumn(name="GOLF_PASS")
 	private GolfPass pass;
 	
-	@OneToMany(mappedBy="usersId")
-	private List<Golf> golf = new ArrayList<Golf>();;
+	@OneToMany(mappedBy="usersId", cascade=CascadeType.ALL)
+	private List<Golf> golf = new ArrayList<Golf>();
 
 	public List<Golf> getGolf() {
 		return golf;
@@ -103,7 +103,7 @@ public class GolfUser extends AbstractDateStampEntity implements Serializable{
 	@Override
 	public String toString() {
 		return "GolfUser [userId=" + userId + ", name=" + name + ", age=" + age + ", gender=" + gender + ", handicap="
-				+ handicap + ", pass=" + pass + ", golf=" + golf + "]";
+				+ handicap + ", pass=" + pass + "]";
 	}
 
 	

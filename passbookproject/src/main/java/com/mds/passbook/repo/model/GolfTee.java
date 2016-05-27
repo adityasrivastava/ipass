@@ -2,74 +2,59 @@ package com.mds.passbook.repo.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.GeneratorType;
 
 @Entity(name="GOLF_TEE")
 public class GolfTee extends AbstractDateStampEntity implements Serializable{
-	
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="TEE_TYPE_ID")
-	private int teeTypeId;
+	@Column(name="TEE_ID")
+	private int teeId;
 	
 	@Column(name="COLOR")
 	private String color;
 	
-	@Column(name="YARDS")
-	private int yards;
-	
-	@Column(name="PAR")
-	private int par;
-	
-	@OneToMany(mappedBy="teeTypesId")
-	private List<Golf> golf = new ArrayList<Golf>();
+	@OneToMany(mappedBy="golfTee", cascade=CascadeType.ALL)
+	private List<GolfTeeDetails> teeDetails = new ArrayList<GolfTeeDetails>();
 
-	public List<Golf> getGolf() {
-		return golf;
+	public List<GolfTeeDetails> getTeeDetails() {
+		return teeDetails;
 	}
-	public void setGolf(List<Golf> golf) {
-		this.golf = golf;
+
+	public void setTeeDetails(List<GolfTeeDetails> teeDetails) {
+		this.teeDetails = teeDetails;
 	}
-	public int getTeeTypeId() {
-		return teeTypeId;
+
+	public int getTeeId() {
+		return teeId;
 	}
-	public void setTeeTypeId(int teeTypeId) {
-		this.teeTypeId = teeTypeId;
+
+	public void setTeeId(int teeId) {
+		this.teeId = teeId;
 	}
-	
+
 	public String getColor() {
 		return color;
 	}
+
 	public void setColor(String color) {
 		this.color = color;
 	}
-	public int getYards() {
-		return yards;
-	}
-	public void setYards(int yards) {
-		this.yards = yards;
-	}
-	public int getPar() {
-		return par;
-	}
-	public void setPar(int par) {
-		this.par = par;
-	}
+
 	@Override
 	public String toString() {
-		return "GolfTee [teeTypeId=" + teeTypeId + ", color=" + color + ", yards=" + yards + ", par=" + par + ", golf="
-				+ golf + "]";
+		return "GolfTee [teeId=" + teeId + ", color=" + color + "]";
 	}
-
 
 }

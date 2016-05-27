@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,11 +29,13 @@ public class GolfScore extends AbstractDateStampEntity implements Serializable{
 	private int score;
 
 	
-	@ManyToOne(cascade=CascadeType.MERGE)
-	@JoinTable(
-				name="GOLF_SCORES",
-				joinColumns=@JoinColumn(name="SCORE_ID"),
-				inverseJoinColumns=@JoinColumn(name="GOLF_ID"))
+	@ManyToOne
+	@JoinColumn(name="GOLF_ID",
+				foreignKey=@ForeignKey(name="GOLF_ID_FK"))
+//	@JoinTable(
+//				name="GOLF_SCORES",
+//				joinColumns=@JoinColumn(name="SCORE_ID"),
+//				inverseJoinColumns=@JoinColumn(name="GOLF_ID"))
 	private Golf golf;
 	
 	
@@ -65,8 +68,5 @@ public class GolfScore extends AbstractDateStampEntity implements Serializable{
 		return "GolfScore [scoreId=" + scoreId + ", holeNumber=" + holeNumber + ", score=" + score + ", golf=" + golf
 				+ "]";
 	}
-
-	
-	
 
 }

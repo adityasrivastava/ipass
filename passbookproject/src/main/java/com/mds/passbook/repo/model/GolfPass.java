@@ -24,17 +24,7 @@ public class GolfPass extends AbstractDateStampEntity implements Serializable{
 	
 	@Column(name="PASS_ADDED")
 	private boolean passAdded;
-	
-	@OneToOne(mappedBy="pass")
-	private GolfUser user;
 
-	
-	public GolfUser getUser() {
-		return user;
-	}
-	public void setUser(GolfUser user) {
-		this.user = user;
-	}
 	public int getId() {
 		return passId;
 	}
@@ -55,7 +45,7 @@ public class GolfPass extends AbstractDateStampEntity implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "GolfPass [passId=" + passId + ", token=" + token + ", passAdded=" + passAdded + ", user=" + user + "]";
+		return "GolfPass [passId=" + passId + ", token=" + token + ", passAdded=" + passAdded + "]";
 	}
 
 	

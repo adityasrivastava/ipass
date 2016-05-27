@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,7 +25,7 @@ public class GolfHoles extends AbstractDateStampEntity implements Serializable{
 	@Column(name="HOLES")
 	private int holes;
 	
-	@OneToMany(mappedBy="holeTypesId")
+	@OneToMany(mappedBy="holeTypesId", cascade=CascadeType.ALL)
 	private List<Golf> golf = new ArrayList<Golf>();
 
 	public List<Golf> getGolf() {
@@ -47,7 +49,7 @@ public class GolfHoles extends AbstractDateStampEntity implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "GolfHoles [holeTypeId=" + holeTypeId + ", holes=" + holes + ", golf=" + golf + "]";
+		return "GolfHoles [holeTypeId=" + holeTypeId + ", holes=" + holes + "]";
 	}
 
 	
