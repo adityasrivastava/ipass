@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @Entity(name="GOLF_SCORE")
 public class GolfScore extends AbstractDateStampEntity implements Serializable{
@@ -22,12 +23,11 @@ public class GolfScore extends AbstractDateStampEntity implements Serializable{
 	@Column(name="SCORE_ID")
 	private int scoreId;
 	
-	@Column(name="HOLE_NUMBER")
-	private int holeNumber;
-	
 	@Column(name="SCORE")
 	private int score;
 
+	@OneToOne
+	private GolfTeeDetails golfTeeDetailsId;
 	
 	@ManyToOne
 	@JoinColumn(name="GOLF_ID",
@@ -39,6 +39,19 @@ public class GolfScore extends AbstractDateStampEntity implements Serializable{
 	private Golf golf;
 	
 	
+	
+	public int getScoreId() {
+		return scoreId;
+	}
+	public void setScoreId(int scoreId) {
+		this.scoreId = scoreId;
+	}
+	public GolfTeeDetails getGolfTeeDetailsId() {
+		return golfTeeDetailsId;
+	}
+	public void setGolfTeeDetailsId(GolfTeeDetails golfTeeDetailsId) {
+		this.golfTeeDetailsId = golfTeeDetailsId;
+	}
 	public Golf getGolf() {
 		return golf;
 	}
@@ -51,12 +64,7 @@ public class GolfScore extends AbstractDateStampEntity implements Serializable{
 	public void setId(int scoreId) {
 		this.scoreId = scoreId;
 	}
-	public int getHoleNumber() {
-		return holeNumber;
-	}
-	public void setHoleNumber(int holeNumber) {
-		this.holeNumber = holeNumber;
-	}
+
 	public int getScore() {
 		return score;
 	}
@@ -65,7 +73,7 @@ public class GolfScore extends AbstractDateStampEntity implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "GolfScore [scoreId=" + scoreId + ", holeNumber=" + holeNumber + ", score=" + score + ", golf=" + golf
+		return "GolfScore [scoreId=" + scoreId + ", score=" + score + ", golf=" + golf
 				+ "]";
 	}
 

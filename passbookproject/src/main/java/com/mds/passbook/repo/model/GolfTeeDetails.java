@@ -26,6 +26,9 @@ public class GolfTeeDetails extends AbstractDateStampEntity implements Serializa
 	@Column(name="TEE_TYPE_ID")
 	private int teeTypeId;
 	
+	@Column(name="HOLE_NUMBER")
+	private int holeNumber;
+	
 	@Column(name="YARDS")
 	private int yards;
 	
@@ -40,6 +43,12 @@ public class GolfTeeDetails extends AbstractDateStampEntity implements Serializa
 				foreignKey=@ForeignKey(name="GOLF_TEE_FK"))
 	private GolfTee golfTee;
 
+	public int getHoleNumber() {
+		return holeNumber;
+	}
+	public void setHoleNumber(int holeNumber) {
+		this.holeNumber = holeNumber;
+	}
 	public GolfTee getGolfTee() {
 		return golfTee;
 	}

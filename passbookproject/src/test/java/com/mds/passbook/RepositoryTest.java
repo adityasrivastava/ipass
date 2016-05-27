@@ -115,7 +115,6 @@ public class RepositoryTest {
 	@org.junit.Test
 	public void insertGolfScoreTest(){
 		GolfScore gScore = new GolfScore();
-		gScore.setHoleNumber(1);
 		gScore.setScore(10);
 		
 		golfScoreRepo.save(gScore);
@@ -206,15 +205,25 @@ public class RepositoryTest {
 		teeDetails.setStroke(1);
 		teeDetails.setYards(1);
 		teeDetails.setGolfTee(gTee);
+		teeDetails.setHoleNumber(1);
 		
 		GolfTeeDetails teeDetails2 = new GolfTeeDetails();
 		teeDetails2.setPar(1);
 		teeDetails2.setStroke(1);
 		teeDetails2.setYards(1);
 		teeDetails2.setGolfTee(gTee);
+		teeDetails2.setHoleNumber(2);
+		
+		GolfTeeDetails teeDetails3 = new GolfTeeDetails();
+		teeDetails3.setPar(1);
+		teeDetails3.setStroke(1);
+		teeDetails3.setYards(1);
+		teeDetails3.setGolfTee(gTee);
+		teeDetails3.setHoleNumber(3);
 		
 		gTee.getTeeDetails().add(teeDetails);
 		gTee.getTeeDetails().add(teeDetails2);
+		gTee.getTeeDetails().add(teeDetails3);
 	
 		golfTeeRepo.save(gTee);
 	
@@ -225,19 +234,22 @@ public class RepositoryTest {
 		
 		List<GolfScore> score = new ArrayList<>();
 		GolfScore gScore = new GolfScore();
-		gScore.setHoleNumber(1);
+
 		gScore.setScore(10);
 		gScore.setGolf(addGolf);
+		gScore.setGolfTeeDetailsId(teeDetails);
 		
 		GolfScore gScore1 = new GolfScore();
-		gScore1.setHoleNumber(2);
+	
 		gScore1.setScore(10);
 		gScore1.setGolf(addGolf);
+		gScore1.setGolfTeeDetailsId(teeDetails2);
 		
 		GolfScore gScore2 = new GolfScore();
-		gScore2.setHoleNumber(3);
+
 		gScore2.setScore(10);
 		gScore2.setGolf(addGolf);
+		gScore2.setGolfTeeDetailsId(teeDetails3);
 		
 		score.add(gScore);
 		score.add(gScore1);
