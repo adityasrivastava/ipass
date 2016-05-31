@@ -1,4 +1,4 @@
-package com.mds.passbook.repo.model;
+package com.mds.passbook.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,18 +14,10 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GeneratorType;
 
-@Entity(name="GOLF_TEE")
-public class GolfTee extends AbstractDateStampEntity implements Serializable{
+public class GolfTee {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="TEE_ID")
 	private int teeId;
-	
-	@Column(name="COLOR")
 	private String color;
-	
-	@OneToMany(mappedBy="golfTee", cascade=CascadeType.ALL)
 	private List<GolfTeeDetails> teeDetails = new ArrayList<GolfTeeDetails>();
 
 	public List<GolfTeeDetails> getTeeDetails() {
@@ -54,7 +46,7 @@ public class GolfTee extends AbstractDateStampEntity implements Serializable{
 
 	@Override
 	public String toString() {
-		return "GolfTee [teeId=" + teeId + ", color=" + color + "]";
+		return "GolfTee [teeId=" + teeId + ", color=" + color + ", teeDetails="+ teeDetails + "]";
 	}
 
 }

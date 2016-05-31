@@ -1,0 +1,98 @@
+package com.mds.passbook.bean;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.validation.constraints.NotNull;
+
+public class Golf {
+	
+	private int id;
+	private GolfUser usersId;
+	private GolfCourse golfCoursesId;
+	private GolfHoles holeTypesId;
+	private GolfTee teeTypesId;
+
+	private List<GolfScore> scoresId = new ArrayList<GolfScore>();
+
+	
+	
+	public Golf(int id, GolfUser usersId, GolfCourse golfCoursesId, GolfHoles holeTypesId, GolfTee teeTypesId,
+			List<GolfScore> scoresId) {
+		super();
+		this.id = id;
+		this.usersId = usersId;
+		this.golfCoursesId = golfCoursesId;
+		this.holeTypesId = holeTypesId;
+		this.teeTypesId = teeTypesId;
+		this.scoresId = scoresId;
+	}
+
+	public Golf(){
+		
+	}
+
+	public List<GolfScore> getScoresId() {
+		return scoresId;
+	}
+
+	public void setScoresId(List<GolfScore> scoresId) {
+		this.scoresId = scoresId;
+	}
+
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public GolfUser getUsersId() {
+		return usersId;
+	}
+	public void setUsersId(GolfUser usersId) {
+		this.usersId = usersId;
+	}
+	public GolfCourse getGolfCoursesId() {
+		return golfCoursesId;
+	}
+	public void setGolfCoursesId(GolfCourse golfCoursesId) {
+		this.golfCoursesId = golfCoursesId;
+	}
+	public GolfHoles getHoleTypesId() {
+		return holeTypesId;
+	}
+	public void setHoleTypesId(GolfHoles holeTypesId) {
+		this.holeTypesId = holeTypesId;
+	}
+	public GolfTee getTeeTypesId() {
+		return teeTypesId;
+	}
+	public void setTeeTypesId(GolfTee teeTypesId) {
+		this.teeTypesId = teeTypesId;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Golf [id=" + id + ", usersId=" + usersId + ", golfCoursesId=" + golfCoursesId + ", holeTypesId="
+				+ holeTypesId + ", teeTypesId=" + teeTypesId + "]";
+	}
+	
+	
+
+}

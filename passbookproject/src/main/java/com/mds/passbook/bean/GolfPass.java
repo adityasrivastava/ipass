@@ -1,4 +1,4 @@
-package com.mds.passbook.repo.model;
+package com.mds.passbook.bean;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -11,20 +11,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-@Entity(name="GOLF_PASS")
-public class GolfPass extends AbstractDateStampEntity implements Serializable{
+public class GolfPass {
 	
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="PASS_ID")
 	private int passId;
-	
-	@Column(name="TOKEN")
 	private String token;
-	
-	@Column(name="PASS_ADDED")
 	private boolean passAdded;
+	
+	
 
+	public GolfPass(String token, boolean passAdded) {
+		super();
+		this.token = token;
+		this.passAdded = passAdded;
+	}
 	public int getId() {
 		return passId;
 	}

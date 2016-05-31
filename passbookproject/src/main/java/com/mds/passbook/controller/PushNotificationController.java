@@ -2,14 +2,18 @@ package com.mds.passbook.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,8 +27,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mds.passbook.bean.GolfGame;
+import com.mds.passbook.bean.GolfPass;
+import com.mds.passbook.bean.GolfUser;
 import com.mds.passbook.notification.PassbookNotification;
+import com.mds.passbook.repo.dao.GolfDao;
+import com.mds.passbook.repo.dao.GolfScoreDao;
+import com.mds.passbook.service.GolfService;
 import com.mds.passkit.GeneratePass;
+import com.mds.passkit.GolfWallet;
 
 /**
  * Apple Wallet webservice which allow Update, Delete, Add new Pass to wallet of an iOS device
@@ -45,6 +56,9 @@ public class PushNotificationController{
 	private static String hole;
 	private static String score;
 	
+	@Autowired
+	GolfService golfService;
+	
 	
 	/**
 	 * Check Server status
@@ -63,6 +77,96 @@ public class PushNotificationController{
 	public void changeStatus(){
 		PassbookStatus.getInstance().setUpdateStatus(false);
 	}
+
+	@RequestMapping(value="/createPassbook", method=RequestMethod.GET, produces="application/vnd.apple.pkpass")
+	public ResponseEntity<InputStreamResource> createPass (@RequestParam(name="name", required=false) String name,
+							@RequestParam(name="age", required=false) String age, 
+							@RequestParam(name="gender", required=false) String gender,
+							@RequestParam(name="golf_course", required=false) String golf_course,
+							@RequestParam(name="hole_type", required=false) String hole_type,
+							@RequestParam(name="tee_type", required=false) String tee_type,
+							@RequestParam(name="handicap", required=false) String handicap
+							   ) throws IOException{
+	
+		GolfUser user = new GolfUser();
+		user.setAge(Integer.parseInt(age));
+		user.setGender(gender);
+		user.setHandicap(Integer.parseInt(handicap));
+		user.setName(name);
+
+		user = golfService.addUser(user);
+		
+		
+		GolfGame golf;
+		
+		golf = new GolfGame();
+		golf.setCourseId(Integer.parseInt(golf_course));
+		golf.setHoleTypeId(Integer.parseInt(hole_type));
+		golf.setTeeTypeId(Integer.parseInt(tee_type));
+		golf.setUserId(user.getUserId());
+		
+		String response;
+		List<GolfScoreDao>  dao = null;
+		
+		GolfWallet wallet = new GolfWallet();
+		
+		dao = golfService.addGolf(golf);
+		
+		GolfDao golfDao = dao.get(0).getGolf();
+
+		File newPass;
+		InputStream passInputStream = null;
+		HttpHeaders responseHeaders;
+		GeneratePass generatePass;
+
+		responseHeaders = new HttpHeaders();
+		generatePass = new GeneratePass();
+		
+		wallet.setSerialNumber("XYZ-YZA");
+		wallet.setUserName(golfDao.getUsersId().getName());
+		wallet.setUserGender(golfDao.getUsersId().getGender());
+		wallet.setUserAge(""+golfDao.getUsersId().getAge());
+		wallet.setGolfHoleType(""+golfDao.getHoleTypesId().getHoles());
+		
+		List<com.mds.passkit.GolfScore> scores = new ArrayList<com.mds.passkit.GolfScore>();
+		
+		for(GolfScoreDao scoreDao: dao){
+			scores.add(new com.mds.passkit.GolfScore(scoreDao.getScore(), scoreDao.getHoleNumber(), int par, int stroke, int teeType, int yards, , wallet));
+		}
+		
+		// Create Pass
+		try {
+			generatePass.createGenericPass("passes/file3.pkpass", scores);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		// Get new generated pass
+		newPass = new File("passes/file3.pkpass");
+		
+	
+		try {
+			passInputStream = new FileInputStream(newPass);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		// Setup headers for 0 expiry and no cache
+		responseHeaders.add("Cache-Control", "no-cache, no-store, must-revalidate");
+		responseHeaders.add("Pragma", "no-cache");
+		responseHeaders.add("Expires", "0");
+		responseHeaders.setContentDispositionFormData("filename", "file1.pkpass");
+		responseHeaders.setLastModified(new Date().getTime());
+	
+		// Send in response
+		return ResponseEntity
+	            .ok()
+	            .headers(responseHeaders)
+	            .contentLength(newPass.length())
+	            .body(new InputStreamResource(passInputStream));
+		
+	}
+	
 
 	/**
 	 * Download new pass 
@@ -98,11 +202,11 @@ public class PushNotificationController{
 		logger.info("Downloading Pass.....");
 		
 		// Create Pass
-		try {
-			generatePass.createGenericPass("passes/file3.pkpass", "2221", name, age, gender,hole_type, "Hole 1", "0");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			generatePass.createGenericPass("passes/file3.pkpass", "2221", name, age, gender,hole_type, "Hole 1", "0");
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 
 		// Get new generated pass
 		newPass = new File("passes/file3.pkpass");
@@ -224,11 +328,11 @@ public class PushNotificationController{
 		gp = new GeneratePass();
 
 		// Create Pass
-		try {
-			gp.createGenericPass("passes/file3.pkpass", "2221", username, userAge, userGender, holeType, hole, score);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			gp.createGenericPass("passes/file3.pkpass", "2221", username, userAge, userGender, holeType, hole, score);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 
 		// Get new generated pass
 		newPass = new File("passes/file3.pkpass");

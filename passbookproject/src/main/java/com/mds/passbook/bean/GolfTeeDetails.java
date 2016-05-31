@@ -1,4 +1,4 @@
-package com.mds.passbook.repo.model;
+package com.mds.passbook.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,29 +18,14 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-@Entity(name="GOLF_TEE_DETAILS")
-public class GolfTeeDetails extends AbstractDateStampEntity implements Serializable{
+public class GolfTeeDetails {
 	
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="TEE_TYPE_ID")
 	private int teeTypeId;
-	
-	@Column(name="HOLE_NUMBER")
 	private int holeNumber;
-	
-	@Column(name="YARDS")
 	private int yards;
-	
-	@Column(name="PAR")
 	private int par;
-	
-	@Column(name="STROKE")
 	private int stroke;
 	
-	@ManyToOne
-	@JoinColumn(name="TEE_ID",
-				foreignKey=@ForeignKey(name="GOLF_TEE_FK"))
 	private GolfTee golfTee;
 
 	public int getHoleNumber() {
@@ -81,7 +66,7 @@ public class GolfTeeDetails extends AbstractDateStampEntity implements Serializa
 	}
 	@Override
 	public String toString() {
-		return "GolfTee [teeTypeId=" + teeTypeId + ", yards=" + yards + ", par=" + par + "]";
+		return "GolfTee [teeTypeId=" + teeTypeId + ", yards=" + yards + ", par=" + par + ", holeNumber="+ holeNumber + ", stroke="+ stroke + "]";
 	}
 
 

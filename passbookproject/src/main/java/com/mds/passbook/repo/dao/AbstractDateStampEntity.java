@@ -1,4 +1,4 @@
-package com.mds.passbook.repo.model;
+package com.mds.passbook.repo.dao;
 
 import java.util.Date;
 
@@ -13,7 +13,7 @@ import javax.persistence.TemporalType;
 public class AbstractDateStampEntity {
 
 	@Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created", nullable = false)
+    @Column(name = "created")
     private Date created;
 
     @Temporal(TemporalType.TIMESTAMP)

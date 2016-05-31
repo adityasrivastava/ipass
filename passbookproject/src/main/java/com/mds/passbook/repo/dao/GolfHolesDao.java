@@ -1,4 +1,4 @@
-package com.mds.passbook.repo.model;
+package com.mds.passbook.repo.dao;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 @Entity(name="GOLF_HOLES")
-public class GolfHoles extends AbstractDateStampEntity implements Serializable{
+public class GolfHolesDao extends AbstractDateStampEntity implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -26,12 +26,20 @@ public class GolfHoles extends AbstractDateStampEntity implements Serializable{
 	private int holes;
 	
 	@OneToMany(mappedBy="holeTypesId", cascade=CascadeType.ALL)
-	private List<Golf> golf = new ArrayList<Golf>();
+	private List<GolfDao> golf = new ArrayList<GolfDao>();
+	
+	public GolfHolesDao(){
+		
+	}
 
-	public List<Golf> getGolf() {
+	public GolfHolesDao(int holeTypeId) {
+		super();
+		this.holeTypeId = holeTypeId;
+	}
+	public List<GolfDao> getGolf() {
 		return golf;
 	}
-	public void setGolf(List<Golf> golf) {
+	public void setGolf(List<GolfDao> golf) {
 		this.golf = golf;
 	}
 	public int getHoleTypeId() {

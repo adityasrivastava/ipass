@@ -8,12 +8,12 @@ public class GenericPassExample {
 	
 	public static void main(String args[]){
 		
-		GeneratePass gp = new GeneratePass();
-		try {
-			gp.createGenericPass("/Users/adityasrivastava/Desktop/file.pkpass", "111", "aditya", "1", "male", "9 Hole","Hole 1", "0");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		GeneratePass gp = new GeneratePass();
+//		try {
+//			gp.createGenericPass("/Users/adityasrivastava/Desktop/file.pkpass", "111", "aditya", "1", "male", "9 Hole","Hole 1", "0");
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 }

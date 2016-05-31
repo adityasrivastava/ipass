@@ -2,8 +2,8 @@ package com.mds.passbook.repo;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.mds.passbook.repo.model.GolfCourse;
+import com.mds.passbook.repo.dao.GolfCourseDao;
 
-public interface GolfCourseRepository extends CrudRepository<GolfCourse, Integer> {
+public interface GolfCourseRepository extends CrudRepository<GolfCourseDao, Integer> {
 
 }

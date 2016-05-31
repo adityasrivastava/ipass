@@ -1,4 +1,4 @@
-package com.mds.passbook.repo.model;
+package com.mds.passbook.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,31 +17,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-@Entity(name="GOLF_USER")
-public class GolfUser extends AbstractDateStampEntity implements Serializable{
+public class GolfUser {
 	
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="USER_ID")
+
 	private int userId;
-	
-	@Column(name="NAME")
 	private String name;
-	
-	@Column(name="AGE")
 	private int age;
-	
-	@Column(name="GENDER")
 	private String gender;
-	
-	@Column(name="HANDICAP")
 	private int handicap;
-	
-	@OneToOne(cascade=CascadeType.ALL, orphanRemoval=true)
-	@JoinColumn(name="GOLF_PASS")
 	private GolfPass pass;
 	
-	@OneToMany(mappedBy="usersId", cascade=CascadeType.ALL)
 	private List<Golf> golf = new ArrayList<Golf>();
 
 	public List<Golf> getGolf() {
@@ -57,8 +42,19 @@ public class GolfUser extends AbstractDateStampEntity implements Serializable{
 	public GolfUser(){
 		
 	}
+	
+	
 
 	
+	public GolfUser(String name, int age, String gender, int handicap, GolfPass pass) {
+		super();
+		this.name = name;
+		this.age = age;
+		this.gender = gender;
+		this.handicap = handicap;
+		this.pass = pass;
+	}
+
 	public int getUserId() {
 		return userId;
 	}

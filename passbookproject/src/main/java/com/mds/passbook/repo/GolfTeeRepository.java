@@ -2,8 +2,8 @@ package com.mds.passbook.repo;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.mds.passbook.repo.model.GolfTee;
+import com.mds.passbook.repo.dao.GolfTeeDao;
 
-public interface GolfTeeRepository extends CrudRepository<GolfTee, Integer>{
+public interface GolfTeeRepository extends CrudRepository<GolfTeeDao, Integer>{
 
 }

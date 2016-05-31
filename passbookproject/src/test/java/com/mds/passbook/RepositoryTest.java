@@ -16,14 +16,14 @@ import com.mds.passbook.repo.GolfRepository;
 import com.mds.passbook.repo.GolfScoreRepository;
 import com.mds.passbook.repo.GolfTeeRepository;
 import com.mds.passbook.repo.GolfUserRepository;
-import com.mds.passbook.repo.model.Golf;
-import com.mds.passbook.repo.model.GolfCourse;
-import com.mds.passbook.repo.model.GolfHoles;
-import com.mds.passbook.repo.model.GolfPass;
-import com.mds.passbook.repo.model.GolfScore;
-import com.mds.passbook.repo.model.GolfTee;
-import com.mds.passbook.repo.model.GolfTeeDetails;
-import com.mds.passbook.repo.model.GolfUser;
+import com.mds.passbook.repo.dao.GolfDao;
+import com.mds.passbook.repo.dao.GolfCourseDao;
+import com.mds.passbook.repo.dao.GolfHolesDao;
+import com.mds.passbook.repo.dao.GolfPassDao;
+import com.mds.passbook.repo.dao.GolfScoreDao;
+import com.mds.passbook.repo.dao.GolfTeeDao;
+import com.mds.passbook.repo.dao.GolfTeeDetailsDao;
+import com.mds.passbook.repo.dao.GolfUserDao;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(Application.class)
@@ -53,8 +53,8 @@ public class RepositoryTest {
 	
 	@org.junit.Test
 	public void getAllTest(){
-		Iterable<Golf> it = golfRepo.findAll();
-		for(Golf g:it){
+		Iterable<GolfDao> it = golfRepo.findAll();
+		for(GolfDao g:it){
 			System.out.println("Golf "+g.getId()+">>>>>>>>>>>>>>>>>>>>");
 			System.out.println(g.toString());
 			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -64,7 +64,7 @@ public class RepositoryTest {
 	
 	@org.junit.Test
 	public void findOneTest(){
-		Golf g = golfRepo.findOne(new Integer(1));
+		GolfDao g = golfRepo.findOne(new Integer(1));
 		System.out.println("Golf "+g.getId()+">>>>>>>>>>>>>>>>>>>>FIND ONE BY ID>>>>>>>>>>>>>>>>>>>>");
 		System.out.println(g.toString());
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -73,7 +73,7 @@ public class RepositoryTest {
 	@org.junit.Test
 	public void insertGolfCourseTest(){
 		// Golf Course Added
-		GolfCourse gCourse = new GolfCourse();
+		GolfCourseDao gCourse = new GolfCourseDao();
 		gCourse.setCourseName("GolfCourse 1");
 		
 		golfCourseRepo.save(gCourse);
@@ -83,7 +83,7 @@ public class RepositoryTest {
 	@org.junit.Test
 	public void insertGolfHolesTest(){
 		// Golf holes Added
-		GolfHoles gHoles = new GolfHoles();
+		GolfHolesDao gHoles = new GolfHolesDao();
 		gHoles.setHoles(9);
 		golfHolesRepo.save(gHoles);
 		
@@ -92,7 +92,7 @@ public class RepositoryTest {
 	@org.junit.Test
 	public void insertGolfPassTest(){
 		// Golf Pass Added
-		GolfPass gPass = new GolfPass();
+		GolfPassDao gPass = new GolfPassDao();
 		gPass.setPassAdded(true);
 		gPass.setToken("XYZ");
 		golfPassRepo.save(gPass);
@@ -102,7 +102,7 @@ public class RepositoryTest {
 	@org.junit.Test
 	public void insertGolfUserTest(){
 	
-		GolfUser gUser = new GolfUser();
+		GolfUserDao gUser = new GolfUserDao();
 		gUser.setAge(1);
 		gUser.setGender("MALE");
 		gUser.setHandicap(20);
@@ -114,7 +114,7 @@ public class RepositoryTest {
 	
 	@org.junit.Test
 	public void insertGolfScoreTest(){
-		GolfScore gScore = new GolfScore();
+		GolfScoreDao gScore = new GolfScoreDao();
 		gScore.setScore(10);
 		
 		golfScoreRepo.save(gScore);
@@ -123,16 +123,16 @@ public class RepositoryTest {
 	@org.junit.Test
 	public void insertGolfTeeTest(){
 		
-		GolfTee gTee = new GolfTee();
+		GolfTeeDao gTee = new GolfTeeDao();
 		gTee.setColor("Red");
 		
-		GolfTeeDetails teeDetails = new GolfTeeDetails();
+		GolfTeeDetailsDao teeDetails = new GolfTeeDetailsDao();
 		teeDetails.setPar(1);
 		teeDetails.setStroke(1);
 		teeDetails.setYards(1);
 		teeDetails.setGolfTee(gTee);
 		
-		GolfTeeDetails teeDetails2 = new GolfTeeDetails();
+		GolfTeeDetailsDao teeDetails2 = new GolfTeeDetailsDao();
 		teeDetails2.setPar(1);
 		teeDetails2.setStroke(1);
 		teeDetails2.setYards(1);
@@ -147,21 +147,21 @@ public class RepositoryTest {
 	@org.junit.Test
 	public void mainTest(){
 		// Create Golf Course
-		GolfCourse gCourse = new GolfCourse();
+		GolfCourseDao gCourse = new GolfCourseDao();
 		gCourse.setCourseName("GolfCourse 1");
 		golfCourseRepo.save(gCourse);
 		
-		GolfCourse gCourse1 = new GolfCourse();
+		GolfCourseDao gCourse1 = new GolfCourseDao();
 		gCourse1.setCourseName("GolfCourse 2");
 		golfCourseRepo.save(gCourse1);
 		
 		
 		// Create golf holes
 		
-		GolfHoles gHoles = new GolfHoles();
+		GolfHolesDao gHoles = new GolfHolesDao();
 		gHoles.setHoles(9);
 		
-		GolfHoles gHoles1 = new GolfHoles();
+		GolfHolesDao gHoles1 = new GolfHolesDao();
 		gHoles1.setHoles(18);
 		
 		golfHolesRepo.save(gHoles);
@@ -169,23 +169,23 @@ public class RepositoryTest {
 		
 		// Create pass 
 		
-		GolfPass pass = new GolfPass();
+		GolfPassDao pass = new GolfPassDao();
 		pass.setPassAdded(true);
 		pass.setToken("ABC=XYZ");
 		
-		GolfPass pass2 = new GolfPass();
+		GolfPassDao pass2 = new GolfPassDao();
 		pass2.setPassAdded(true);
 		pass2.setToken("ABC=XYZ1");
 	
 		// Create golf User
-		GolfUser gUser = new GolfUser();
+		GolfUserDao gUser = new GolfUserDao();
 		gUser.setAge(1);
 		gUser.setGender("MALE");
 		gUser.setHandicap(20);
 		gUser.setName("Aditya");
 		gUser.setPass(pass);
 		
-		GolfUser gUser1 = new GolfUser();
+		GolfUserDao gUser1 = new GolfUserDao();
 		gUser1.setAge(1);
 		gUser1.setGender("MALE");
 		gUser1.setHandicap(10);
@@ -197,24 +197,24 @@ public class RepositoryTest {
 		
 		// Create golf tee
 		
-		GolfTee gTee = new GolfTee();
+		GolfTeeDao gTee = new GolfTeeDao();
 		gTee.setColor("Red");
 		
-		GolfTeeDetails teeDetails = new GolfTeeDetails();
+		GolfTeeDetailsDao teeDetails = new GolfTeeDetailsDao();
 		teeDetails.setPar(1);
 		teeDetails.setStroke(1);
 		teeDetails.setYards(1);
 		teeDetails.setGolfTee(gTee);
 		teeDetails.setHoleNumber(1);
 		
-		GolfTeeDetails teeDetails2 = new GolfTeeDetails();
+		GolfTeeDetailsDao teeDetails2 = new GolfTeeDetailsDao();
 		teeDetails2.setPar(1);
 		teeDetails2.setStroke(1);
 		teeDetails2.setYards(1);
 		teeDetails2.setGolfTee(gTee);
 		teeDetails2.setHoleNumber(2);
 		
-		GolfTeeDetails teeDetails3 = new GolfTeeDetails();
+		GolfTeeDetailsDao teeDetails3 = new GolfTeeDetailsDao();
 		teeDetails3.setPar(1);
 		teeDetails3.setStroke(1);
 		teeDetails3.setYards(1);
@@ -230,26 +230,26 @@ public class RepositoryTest {
 
 		
 		// Default Score
-		Golf addGolf = new Golf();
+		GolfDao addGolf = new GolfDao();
 		
-		List<GolfScore> score = new ArrayList<>();
-		GolfScore gScore = new GolfScore();
+		List<GolfScoreDao> score = new ArrayList<>();
+		GolfScoreDao gScore = new GolfScoreDao();
 
 		gScore.setScore(10);
 		gScore.setGolf(addGolf);
-		gScore.setGolfTeeDetailsId(teeDetails);
+//		gScore.setGolfTeeDetailsId(teeDetails);
 		
-		GolfScore gScore1 = new GolfScore();
+		GolfScoreDao gScore1 = new GolfScoreDao();
 	
 		gScore1.setScore(10);
 		gScore1.setGolf(addGolf);
-		gScore1.setGolfTeeDetailsId(teeDetails2);
+//		gScore1.setGolfTeeDetailsId(teeDetails2);
 		
-		GolfScore gScore2 = new GolfScore();
+		GolfScoreDao gScore2 = new GolfScoreDao();
 
 		gScore2.setScore(10);
 		gScore2.setGolf(addGolf);
-		gScore2.setGolfTeeDetailsId(teeDetails3);
+//		gScore2.setGolfTeeDetailsId(teeDetails3);
 		
 		score.add(gScore);
 		score.add(gScore1);
@@ -265,18 +265,18 @@ public class RepositoryTest {
 		golfRepo.save(addGolf);
 		
 		// Read Golf
-		Golf newGolf = new Golf();
-		GolfCourse g = new GolfCourse();
+		GolfDao newGolf = new GolfDao();
+		GolfCourseDao g = new GolfCourseDao();
 		g.setGolfCourseId(2);
-		Golf find = golfRepo.findByGolfCoursesId(g);
+		GolfDao find = golfRepo.findByGolfCoursesId(g);
 		
 		
 		// Read Golf score 
-		Golf gc = new Golf();
+		GolfDao gc = new GolfDao();
 		gc.setId(1);
-		List<GolfScore> readScore = golfScoreRepo.findByGolf(gc);
+		List<GolfScoreDao> readScore = golfScoreRepo.findByGolf(gc);
 		
-		for(GolfScore gm: readScore){
+		for(GolfScoreDao gm: readScore){
 			System.out.println("SCore: "+gm);
 		}
 	

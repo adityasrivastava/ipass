@@ -1,4 +1,4 @@
-package com.mds.passbook.repo.model;
+package com.mds.passbook.repo.dao;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotNull;
 
 @Entity(name="GOLF")
-public class Golf extends AbstractDateStampEntity implements Serializable{
+public class GolfDao extends AbstractDateStampEntity implements Serializable{
 	
 	@Id
 	@GeneratedValue
@@ -31,50 +31,51 @@ public class Golf extends AbstractDateStampEntity implements Serializable{
 	@ManyToOne
 	@JoinColumn(name="GOLF_USER",
 				foreignKey=@ForeignKey(name="GOLF_USER_FK"))
-//	@JoinTable(
-//				name="GOLF_USERS",
-//				joinColumns=@JoinColumn(name="GOLF_ID"), 
-//				inverseJoinColumns=@JoinColumn(name="USER_ID")
-//				)
-	private GolfUser usersId;
+	private GolfUserDao usersId;
 	
 	@ManyToOne
 	@JoinColumn(name="GOLF_COURSE",
 				foreignKey=@ForeignKey(name="GOLF_COURSE_FK"))
-//	@JoinTable(
-//				name="GOLF_COURSES",
-//				joinColumns=@JoinColumn(name="GOLF_ID"), 
-//				inverseJoinColumns=@JoinColumn(name="COURSE_ID")
-//				)
-	private GolfCourse golfCoursesId;
+	private GolfCourseDao golfCoursesId;
 	
 	@ManyToOne
 	@JoinColumn(name="GOLF_HOLE",
 				foreignKey=@ForeignKey(name="GOLF_HOLE_FK"))
-//	@JoinTable(
-//				name="GOLF_HOLE_TYPES",
-//				joinColumns=@JoinColumn(name="GOLF_ID"), 
-//				inverseJoinColumns=@JoinColumn(name="HOLE_TYPE_ID")
-//				)
-	private GolfHoles holeTypesId;
+	private GolfHolesDao holeTypesId;
 	
 	@OneToOne
 	@JoinColumn(name="GOLF_TEE")
-	private GolfTee teeTypesId;
+	private GolfTeeDao teeTypesId;
 	
 	
 	@OneToMany(mappedBy="golf", cascade=CascadeType.ALL, orphanRemoval=true)
-	private List<GolfScore> scoresId = new ArrayList<GolfScore>();
+	private List<GolfScoreDao> scoresId = new ArrayList<GolfScoreDao>();
 
-	public Golf(){
+	public GolfDao(){
 		
 	}
+	
+	public GolfDao(int id){
+		this.id = id;
+	}
+	
+	
 
-	public List<GolfScore> getScoresId() {
+	public GolfDao(GolfUserDao usersId, GolfCourseDao golfCoursesId, GolfHolesDao holeTypesId, GolfTeeDao teeTypesId) {
+		super();
+		this.usersId = usersId;
+		this.golfCoursesId = golfCoursesId;
+		this.holeTypesId = holeTypesId;
+		this.teeTypesId = teeTypesId;
+	}
+
+
+
+	public List<GolfScoreDao> getScoresId() {
 		return scoresId;
 	}
 
-	public void setScoresId(List<GolfScore> scoresId) {
+	public void setScoresId(List<GolfScoreDao> scoresId) {
 		this.scoresId = scoresId;
 	}
 
@@ -84,28 +85,28 @@ public class Golf extends AbstractDateStampEntity implements Serializable{
 	public void setId(int id) {
 		this.id = id;
 	}
-	public GolfUser getUsersId() {
+	public GolfUserDao getUsersId() {
 		return usersId;
 	}
-	public void setUsersId(GolfUser usersId) {
+	public void setUsersId(GolfUserDao usersId) {
 		this.usersId = usersId;
 	}
-	public GolfCourse getGolfCoursesId() {
+	public GolfCourseDao getGolfCoursesId() {
 		return golfCoursesId;
 	}
-	public void setGolfCoursesId(GolfCourse golfCoursesId) {
+	public void setGolfCoursesId(GolfCourseDao golfCoursesId) {
 		this.golfCoursesId = golfCoursesId;
 	}
-	public GolfHoles getHoleTypesId() {
+	public GolfHolesDao getHoleTypesId() {
 		return holeTypesId;
 	}
-	public void setHoleTypesId(GolfHoles holeTypesId) {
+	public void setHoleTypesId(GolfHolesDao holeTypesId) {
 		this.holeTypesId = holeTypesId;
 	}
-	public GolfTee getTeeTypesId() {
+	public GolfTeeDao getTeeTypesId() {
 		return teeTypesId;
 	}
-	public void setTeeTypesId(GolfTee teeTypesId) {
+	public void setTeeTypesId(GolfTeeDao teeTypesId) {
 		this.teeTypesId = teeTypesId;
 	}
 

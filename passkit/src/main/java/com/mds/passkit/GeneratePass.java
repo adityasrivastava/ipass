@@ -1,7 +1,9 @@
 package com.mds.passkit;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 import com.mds.passkit.exception.PasskitException;
@@ -9,6 +11,7 @@ import com.mds.passkit.pass.container.StorePassContainer;
 import com.mds.passkit.utils.PassKitUtils;
 import com.ryantenney.passkit4j.model.DateField;
 import com.ryantenney.passkit4j.model.EventTicket;
+import com.ryantenney.passkit4j.model.Field;
 import com.ryantenney.passkit4j.model.Generic;
 import com.ryantenney.passkit4j.model.TextAlignment;
 import com.ryantenney.passkit4j.model.TextField;
@@ -21,7 +24,17 @@ public class GeneratePass {
 	private Properties properites;
 	private StorePassContainer storeCardPass;
 	
-	public void createGenericPass(String passLocation, String serialNumber, String name, String age, String gender, String holeType, String hole, String score) throws IOException{
+	public void createGenericPass(String passLocation, List<GolfScore> wallet) throws IOException{
+		
+		List<Field<?>> scoreFields = new ArrayList<>();
+		int totalScore = 0;
+		
+		scoreFields.add(new DateField("datetime", "Date & Time", new Date()));
+		
+		for(GolfScore score: wallet){
+			totalScore += score.getScore();
+			scoreFields.add(new TextField("Hole ", score.getHoleNumber()+" - "+ score.getScore(), "3 Par, 7 Stroke, White Tee, 110 Yards"));
+		}
 		
 		properites = PassKitUtils.getProperties();
 		
@@ -32,20 +45,19 @@ public class GeneratePass {
 		changeField.changeMessage("Update with new Pass");
 
 	      try {
-	        aviva.generateStorePass(passLocation, "12345678912345678", serialNumber,  new Generic()
+	        aviva.generateStorePass(passLocation, "12345678912345678", wallet.get(0).getUser().getSerialNumber(),  new Generic()
 	        	      .headerFields(changeField)
 	        	      .primaryFields(new TextField())
 	        	      .auxiliaryFields(
-	        	    		  new TextField("game","Game", holeType).textAlignment(TextAlignment.LEFT),
-	        	              new TextField("par", "Par", ""+35).textAlignment(TextAlignment.RIGHT)
+	        	    		  new TextField("game","Game", wallet.get(0).getUser().getGolfHoleType()).textAlignment(TextAlignment.LEFT),
+	        	              new TextField("par", "Par", ""+totalScore).textAlignment(TextAlignment.RIGHT)
 	        	      )
 	        	      .secondaryFields(
-	        	    		  new TextField("age","Age", gender.charAt(0)+age).textAlignment(TextAlignment.LEFT),
-	        	              new TextField("name", "Name", ""+name).textAlignment(TextAlignment.RIGHT)
+	        	    		  new TextField("age","Age", wallet.get(0).getUser().getUserGender().charAt(0)+wallet.get(0).getUser().getUserAge()).textAlignment(TextAlignment.LEFT),
+	        	              new TextField("name", "Name", ""+wallet.get(0).getUser().getUserName()).textAlignment(TextAlignment.RIGHT)
 	        	    		 )
 	        	      .backFields(
-	        	              new DateField("datetime", "Date & Time", new Date()),
-	        	              new TextField("hole1", hole+" - "+ score, "3 Par, 7 Stroke, White Tee, 110 Yards")
+	        	    		  scoreFields
 	        	      ));
 	      } catch (PasskitException e) {
 	        e.printStackTrace();

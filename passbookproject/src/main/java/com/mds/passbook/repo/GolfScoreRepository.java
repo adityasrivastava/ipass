@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.mds.passbook.repo.model.Golf;
-import com.mds.passbook.repo.model.GolfScore;
+import com.mds.passbook.repo.dao.GolfDao;
+import com.mds.passbook.repo.dao.GolfScoreDao;
 
-public interface GolfScoreRepository extends CrudRepository<GolfScore, Integer> {
+public interface GolfScoreRepository extends CrudRepository<GolfScoreDao, Integer> {
 
-	public List<GolfScore> findByGolf(Golf golf);
+	public List<GolfScoreDao> findByGolf(GolfDao golf);
 }

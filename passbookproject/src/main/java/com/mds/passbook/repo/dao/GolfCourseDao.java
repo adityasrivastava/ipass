@@ -1,4 +1,4 @@
-package com.mds.passbook.repo.model;
+package com.mds.passbook.repo.dao;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 @Entity(name="GOLF_COURSE")
-public class GolfCourse extends AbstractDateStampEntity implements Serializable{
+public class GolfCourseDao extends AbstractDateStampEntity implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,7 +26,16 @@ public class GolfCourse extends AbstractDateStampEntity implements Serializable{
 	private String courseName;
 	
 	@OneToMany(mappedBy="golfCoursesId", cascade = CascadeType.ALL, orphanRemoval=true)
-	private List<Golf> golf = new ArrayList<Golf>();
+	private List<GolfDao> golf = new ArrayList<GolfDao>();
+	
+	public GolfCourseDao(){
+		
+	}
+
+	public GolfCourseDao(int golfCourseId) {
+		super();
+		this.golfCourseId = golfCourseId;
+	}
 	
 	public String getCourseName() {
 		return courseName;
