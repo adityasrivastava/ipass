@@ -12,9 +12,11 @@ import com.mds.passbook.bean.GolfPass;
 import com.mds.passbook.bean.GolfScore;
 import com.mds.passbook.bean.GolfTee;
 import com.mds.passbook.bean.GolfUser;
+import com.mds.passbook.bean.PassRegistrations;
 import com.mds.passbook.repo.dao.GolfDao;
 import com.mds.passbook.repo.dao.GolfScoreDao;
 import com.mds.passbook.repo.dao.GolfTeeDao;
+import com.mds.passbook.repo.dao.PassRegistrationsDao;
 
 @Service
 public interface GolfService {
@@ -58,15 +60,29 @@ public interface GolfService {
 	void deleteGame(GolfDao golf);
 	void updateGame(GolfDao golf);
 	
-	Iterable<GolfScoreDao> getAllScores();
-	void addScore(GolfScoreDao score);
-	void deleteScore(GolfScoreDao score);
-	void updateScore(GolfScoreDao score);
+	void updateScore(GolfScore score);
 	
 	Iterable<GolfTeeDao> getAllTee();
 	void addTee(GolfTeeDao tee);
 	void deleteTee(GolfTeeDao tee);
 	void updateTee(GolfTeeDao tee);
 	GolfScoreDao getScoreById(int id);
+	
+	List<GolfScoreDao> getScoresById(int id);
+	
+	void deletePassRegistrations(PassRegistrations passRegister);
+	
+	void updatePassRegistrations(PassRegistrations passRegister);
+	
+	List<PassRegistrationsDao> findUpdatedPass(String passTypeId, String deviceId);
+	
+	List<GolfCourse> findAllGolfCourses();
+	
+	List<GolfHoles> findAllGolfHoles();
+	
+	List<GolfTee> findAllGolfTee();
+	
+	List<Golf> findAllGolf();
+	
 	GolfTeeDao getTeeById(int id);
 }

@@ -34,7 +34,6 @@ public class Golf {
 	
 	public Golf(int id, GolfUser usersId, GolfCourse golfCoursesId, GolfHoles holeTypesId, GolfTee teeTypesId,
 			List<GolfScore> scoresId) {
-		super();
 		this.id = id;
 		this.usersId = usersId;
 		this.golfCoursesId = golfCoursesId;
@@ -42,6 +41,14 @@ public class Golf {
 		this.teeTypesId = teeTypesId;
 		this.scoresId = scoresId;
 	}
+	
+	
+
+	public Golf(int id) {
+		this.id = id;
+	}
+
+
 
 	public Golf(){
 		

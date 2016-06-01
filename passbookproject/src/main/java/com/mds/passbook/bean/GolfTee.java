@@ -19,6 +19,20 @@ public class GolfTee {
 	private int teeId;
 	private String color;
 	private List<GolfTeeDetails> teeDetails = new ArrayList<GolfTeeDetails>();
+	
+	public GolfTee(){
+		
+	}
+	
+	
+
+	public GolfTee(int teeId, String color, List<GolfTeeDetails> teeDetails) {
+		this.teeId = teeId;
+		this.color = color;
+		this.teeDetails = teeDetails;
+	}
+
+
 
 	public List<GolfTeeDetails> getTeeDetails() {
 		return teeDetails;

@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.mds.passbook.bean.GolfCourse;
+import com.mds.passbook.mapper.GolfCourseMapper;
 import com.mds.passbook.repo.GolfCourseRepository;
 import com.mds.passbook.repo.GolfHolesRepository;
 import com.mds.passbook.repo.GolfPassRepository;
@@ -49,6 +51,21 @@ public class RepositoryTest {
 	
 	@Autowired
 	GolfTeeRepository golfTeeRepo;
+	
+	@org.junit.Test
+	
+	public void mapperTest(){
+		GolfCourseMapper mapper = new GolfCourseMapper();
+		
+		GolfCourseDao dao = new GolfCourseDao();
+		dao.setCourseName("H1");
+		dao.setGolfCourseId(1);
+		
+		GolfCourse course = mapper.DAOtoDTO(dao);
+		
+		System.out.println(course);
+		
+	}
 	
 	
 	@org.junit.Test

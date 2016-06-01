@@ -7,7 +7,21 @@ public class GolfGame {
 	private int holeTypeId;
 	private int teeTypeId;
 	private int userId;
+	private String passTypeId;
+	private GolfPass pass;
 	
+	public String getPassTypeId() {
+		return passTypeId;
+	}
+	public void setPassTypeId(String passTypeId) {
+		this.passTypeId = passTypeId;
+	}
+	public GolfPass getPass() {
+		return pass;
+	}
+	public void setPass(GolfPass pass) {
+		this.pass = pass;
+	}
 	public int getCourseId() {
 		return courseId;
 	}

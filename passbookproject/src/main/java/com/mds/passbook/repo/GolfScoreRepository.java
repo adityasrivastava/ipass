@@ -10,4 +10,5 @@ import com.mds.passbook.repo.dao.GolfScoreDao;
 public interface GolfScoreRepository extends CrudRepository<GolfScoreDao, Integer> {
 
 	public List<GolfScoreDao> findByGolf(GolfDao golf);
+	public GolfScoreDao findByGolfAndHoleNumber(GolfDao golfGameId, int holeNumber);
 }

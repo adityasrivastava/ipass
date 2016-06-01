@@ -20,6 +20,19 @@ public class GolfHoles {
 	private int holes;
 
 	private List<Golf> golf = new ArrayList<Golf>();
+	
+	public GolfHoles(){
+		
+	}
+	
+	
+
+	public GolfHoles(int holeTypeId, int holes) {
+		this.holeTypeId = holeTypeId;
+		this.holes = holes;
+	}
+
+
 
 	public List<Golf> getGolf() {
 		return golf;

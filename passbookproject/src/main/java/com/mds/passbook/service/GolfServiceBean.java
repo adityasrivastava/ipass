@@ -15,8 +15,14 @@ import com.mds.passbook.bean.GolfScore;
 import com.mds.passbook.bean.GolfTee;
 import com.mds.passbook.bean.GolfTeeDetails;
 import com.mds.passbook.bean.GolfUser;
+import com.mds.passbook.bean.PassRegistrations;
+import com.mds.passbook.mapper.GolfCourseMapper;
+import com.mds.passbook.mapper.GolfHolesMapper;
+import com.mds.passbook.mapper.GolfMapper;
+import com.mds.passbook.mapper.GolfTeeMapper;
 import com.mds.passbook.repo.GolfCourseRepository;
 import com.mds.passbook.repo.GolfHolesRepository;
+import com.mds.passbook.repo.GolfPassRegistrationsRepository;
 import com.mds.passbook.repo.GolfPassRepository;
 import com.mds.passbook.repo.GolfRepository;
 import com.mds.passbook.repo.GolfScoreRepository;
@@ -31,31 +37,35 @@ import com.mds.passbook.repo.dao.GolfScoreDao;
 import com.mds.passbook.repo.dao.GolfTeeDao;
 import com.mds.passbook.repo.dao.GolfTeeDetailsDao;
 import com.mds.passbook.repo.dao.GolfUserDao;
+import com.mds.passbook.repo.dao.PassRegistrationsDao;
 
 @Component
-public class GolfServiceBean implements GolfService{
-	
+public class GolfServiceBean implements GolfService {
+
 	@Autowired
 	GolfRepository golfRepo;
-	
+
 	@Autowired
 	GolfCourseRepository golfCourseRepo;
-	
+
 	@Autowired
 	GolfHolesRepository golfHolesRepo;
-	
+
 	@Autowired
 	GolfPassRepository golfPassRepo;
-	
+
+	@Autowired
+	GolfPassRegistrationsRepository golfPassRegisterRepo;
+
 	@Autowired
 	GolfUserRepository golfUserRepo;
-	
+
 	@Autowired
 	GolfScoreRepository golfScoreRepo;
-	
+
 	@Autowired
 	GolfTeeRepository golfTeeRepo;
-	
+
 	@Autowired
 	GolfTeeDetailsRepository golfTeeDetailsRepo;
 
@@ -64,25 +74,23 @@ public class GolfServiceBean implements GolfService{
 
 		GolfUserDao userDao;
 		GolfPassDao passDao;
-		
+
 		userDao = new GolfUserDao();
-		
+
 		userDao.setName(user.getName());
 		userDao.setAge(user.getAge());
 		userDao.setGender(user.getGender());
 		userDao.setHandicap(user.getHandicap());
-		
+
 		passDao = new GolfPassDao();
-		if(user.getPass() != null){
+		if (user.getPass() != null) {
 			passDao.setPassAdded(user.getPass().isPassAdded());
-			passDao.setToken(user.getPass().getToken());
 			userDao.setPass(passDao);
 		}
-		
+
 		userDao = golfUserRepo.save(userDao);
-		
 		user.setUserId(userDao.getUserId());
-		
+
 		return user;
 	}
 
@@ -100,9 +108,9 @@ public class GolfServiceBean implements GolfService{
 
 	@Override
 	public Iterable<GolfUser> getAllUser() {
-		
+
 		GolfUser user = new GolfUser();
-		
+
 		return null;
 	}
 
@@ -138,28 +146,23 @@ public class GolfServiceBean implements GolfService{
 	}
 
 	@Override
-	public Iterable<GolfScoreDao> getAllScores() {
-		return golfScoreRepo.findAll();
-	}
-
-	@Override
 	public GolfScoreDao getScoreById(int id) {
 		return golfScoreRepo.findOne(id);
 	}
 
 	@Override
-	public void addScore(GolfScoreDao score) {
-		golfScoreRepo.save(score);
-	}
+	public void updateScore(GolfScore score) {
 
-	@Override
-	public void deleteScore(GolfScoreDao score) {
-		golfScoreRepo.delete(score);
-	}
+		GolfScoreDao scoreDao;
+		GolfDao golfDao;
 
-	@Override
-	public void updateScore(GolfScoreDao score) {
-		golfScoreRepo.save(score);
+		golfDao = golfRepo.findOne(score.getGolf().getId());
+
+		scoreDao = golfScoreRepo.findByGolfAndHoleNumber(golfDao, score.getHoleNumber());
+
+		scoreDao.setScore(score.getScore());
+
+		golfScoreRepo.save(scoreDao);
 	}
 
 	@Override
@@ -189,31 +192,32 @@ public class GolfServiceBean implements GolfService{
 
 	@Override
 	public void createGame(GolfUser user, String golfCourseId, String holeTypeId, String teeTypeId) {
-		
+
 		GolfPass golfPass;
-		
+
 		GolfDao golfDao;
 		GolfUserDao userDao;
 		GolfPassDao passDao;
-		
+
 		golfPass = user.getPass();
-		
+
 		passDao = new GolfPassDao(golfPass.getToken(), golfPass.isPassAdded());
 		userDao = new GolfUserDao(user.getName(), user.getAge(), user.getGender(), user.getHandicap(), passDao);
 
-		golfDao = new GolfDao(userDao, new GolfCourseDao(Integer.parseInt(golfCourseId)), new GolfHolesDao(Integer.parseInt(holeTypeId)), new GolfTeeDao(Integer.parseInt(teeTypeId)));
-		
+		golfDao = new GolfDao(userDao, new GolfCourseDao(Integer.parseInt(golfCourseId)),
+				new GolfHolesDao(Integer.parseInt(holeTypeId)), new GolfTeeDao(Integer.parseInt(teeTypeId)));
+
 		golfRepo.save(golfDao);
 	}
 
 	@Override
 	public void addGolfCourse(GolfCourse course) {
 		GolfCourseDao courseDao;
-		
+
 		courseDao = new GolfCourseDao();
 		courseDao.setCourseName(course.getCourseName());
 		golfCourseRepo.save(courseDao);
-	
+
 	}
 
 	@Override
@@ -223,20 +227,20 @@ public class GolfServiceBean implements GolfService{
 
 	@Override
 	public void updateGolfCourse(GolfCourse course) {
-		
+
 		GolfCourseDao courseDao;
-		
+
 		courseDao = new GolfCourseDao();
 		courseDao.setGolfCourseId(course.getGolfCourseId());
 		courseDao.setCourseName(course.getCourseName());
-		
+
 		golfCourseRepo.save(courseDao);
 	}
 
 	@Override
 	public void addGolfHole(GolfHoles hole) {
 		GolfHolesDao holesDao;
-		
+
 		holesDao = new GolfHolesDao();
 		holesDao.setHoles(hole.getHoles());
 		golfHolesRepo.save(holesDao);
@@ -250,11 +254,11 @@ public class GolfServiceBean implements GolfService{
 	@Override
 	public void updateGolfHole(GolfHoles hole) {
 		GolfHolesDao holeDao;
-		
+
 		holeDao = new GolfHolesDao();
 		holeDao.setHoleTypeId(hole.getHoleTypeId());
 		holeDao.setHoles(hole.getHoles());
-		
+
 		golfHolesRepo.save(holeDao);
 	}
 
@@ -263,11 +267,11 @@ public class GolfServiceBean implements GolfService{
 		GolfTeeDao teeDao;
 
 		List<GolfTeeDetailsDao> detailsDaoList;
-		
+
 		detailsDaoList = new ArrayList<GolfTeeDetailsDao>();
 		teeDao = new GolfTeeDao();
-		
-		for(GolfTeeDetails teeDetails: tee.getTeeDetails()){
+
+		for (GolfTeeDetails teeDetails : tee.getTeeDetails()) {
 			GolfTeeDetailsDao detailsDao = new GolfTeeDetailsDao();
 			detailsDao.setGolfTee(teeDao);
 			detailsDao.setHoleNumber(teeDetails.getHoleNumber());
@@ -279,9 +283,9 @@ public class GolfServiceBean implements GolfService{
 
 		teeDao.setTeeDetails(detailsDaoList);
 		teeDao.setColor(tee.getColor());
-		
+
 		golfTeeRepo.save(teeDao);
-		
+
 	}
 
 	@Override
@@ -294,14 +298,14 @@ public class GolfServiceBean implements GolfService{
 		GolfTeeDao teeDao;
 
 		List<GolfTeeDetailsDao> detailsDaoList;
-		
+
 		detailsDaoList = new ArrayList<GolfTeeDetailsDao>();
 		teeDao = new GolfTeeDao();
-		
-		for(GolfTeeDetails teeDetails: tee.getTeeDetails()){
+
+		for (GolfTeeDetails teeDetails : tee.getTeeDetails()) {
 			GolfTeeDetailsDao detailsDao = new GolfTeeDetailsDao();
 			detailsDao.setTeeTypeId(teeDetails.getTeeTypeId());
-	
+
 			detailsDao.setHoleNumber(teeDetails.getHoleNumber());
 			detailsDao.setPar(teeDetails.getPar());
 			detailsDao.setStroke(teeDetails.getStroke());
@@ -309,53 +313,54 @@ public class GolfServiceBean implements GolfService{
 			detailsDaoList.add(detailsDao);
 		}
 
-		
-//		teeDao.setTeeDetails(detailsDaoList);
+		// teeDao.setTeeDetails(detailsDaoList);
 		teeDao.setColor(tee.getColor());
 
 		golfTeeRepo.save(teeDao);
-		
+
 	}
 
 	@Override
 	public void addGolfPass(GolfPass pass) {
 		GolfPassDao passDao;
-		
+
 		passDao = new GolfPassDao();
-		
+
 		passDao.setPassAdded(pass.isPassAdded());
 		passDao.setToken(pass.getToken());
-		
+
 		golfPassRepo.save(passDao);
 	}
 
 	@Override
 	public void deleteGolfPass(GolfPass pass) {
-		golfPassRepo.delete(pass.getId());
+		golfPassRepo.delete(pass.getPassId());
 	}
 
 	@Override
 	public void updateGolfPass(GolfPass pass) {
 		GolfPassDao passDao;
-		
+
 		passDao = new GolfPassDao();
-		
-		passDao.setId(pass.getId());
+
+		passDao.setId(pass.getPassId());
 		passDao.setPassAdded(pass.isPassAdded());
 		passDao.setToken(pass.getToken());
-		
+		passDao.setDeviceId(pass.getDeviceId());
+
 		golfPassRepo.save(passDao);
 	}
 
 	@Override
 	public List<GolfScoreDao> addGolf(GolfGame golf) {
-		
+
 		GolfDao golfDao;
 		GolfUserDao userDao;
 		GolfTeeDao teeDao;
 		GolfTeeDetailsDao teeDetailsDao;
 		GolfCourseDao courseDao;
 		GolfHolesDao holesDao;
+		GolfPassDao passDao;
 		List<GolfScoreDao> scoreDaoList;
 
 		scoreDaoList = new ArrayList<GolfScoreDao>();
@@ -371,20 +376,27 @@ public class GolfServiceBean implements GolfService{
 		golfDao.setUsersId(userDao);
 
 		GolfDao resultDao = golfRepo.save(golfDao);
-		
-		for(int holeNumber=1; holeNumber <= holesDao.getHoles(); holeNumber++){
-			teeDetailsDao = golfTeeDetailsRepo.findByTeeTypeIdAndHoleNumber(teeDao.getTeeId(), holeNumber);
+
+		// Mapping Tee Details with score
+		for (int holeNumber = 1; holeNumber <= holesDao.getHoles(); holeNumber++) {
+			teeDetailsDao = golfTeeDetailsRepo.findByGolfTeeAndHoleNumber(teeDao, holeNumber);
 			scoreDaoList.add(new GolfScoreDao(0, holeNumber, resultDao, teeDetailsDao));
 		}
-		
 
-		golfScoreRepo.save(scoreDaoList); 
-		
+		PassRegistrationsDao passRegisterDao = new PassRegistrationsDao();
+		passRegisterDao.setPass(userDao.getPass());
+		passRegisterDao.setPassTypeId(golf.getPassTypeId());
+
+		passRegisterDao.setSerialNumber("" + golfDao.getId());
+		golfPassRegisterRepo.save(passRegisterDao);
+
+		golfScoreRepo.save(scoreDaoList);
+
 		List<GolfScoreDao> scoreDao = golfScoreRepo.findByGolf(resultDao);
-		
-		System.out.println(scoreDao);
+
+		System.out.println("SCORE DAO ___" + scoreDao);
 		return scoreDao;
-		
+
 	}
 
 	@Override
@@ -395,35 +407,126 @@ public class GolfServiceBean implements GolfService{
 	@Override
 	public void updateGolf(GolfGame golf) {
 
-
-		
 	}
 
 	@Override
 	public void addGolfScore(GolfScore score) {
-		
+
 		GolfScoreDao scoreDao;
-		
+
 		scoreDao = new GolfScoreDao();
-		
+
 		scoreDao.setGolf(new GolfDao(score.getId()));
-		
-		
+
 		golfScoreRepo.save(scoreDao);
 	}
 
 	@Override
 	public void deleteGolfScore(GolfScore score) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void updateGolfScore(GolfScore score) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	
+
+	@Override
+	public List<GolfScoreDao> getScoresById(int id) {
+		GolfScoreDao scoreDao;
+		GolfDao golfDao;
+
+		golfDao = golfRepo.findOne(id);
+
+		return golfScoreRepo.findByGolf(golfDao);
+	}
+
+	@Override
+	public void updatePassRegistrations(PassRegistrations passRegister) {
+
+	}
+
+	@Override
+	public void deletePassRegistrations(PassRegistrations passRegister) {
+		PassRegistrationsDao registrationsDao;
+
+		registrationsDao = new PassRegistrationsDao();
+		registrationsDao.setPassTypeId(passRegister.getPassTypeId());
+		registrationsDao.setSerialNumber(passRegister.getSerialNumber());
+
+		golfPassRegisterRepo.delete(registrationsDao);
+	}
+
+	@Override
+	public List<PassRegistrationsDao> findUpdatedPass(String passTypeId, String deviceId) {
+
+		GolfPassDao passDao;
+		List<PassRegistrationsDao> registrationsDao;
+
+		passDao = golfPassRepo.findByDeviceId(deviceId);
+		registrationsDao = golfPassRegisterRepo.findByPassTypeId(passTypeId);
+
+		return registrationsDao;
+
+	}
+
+	@Override
+	public List<GolfCourse> findAllGolfCourses() {
+
+		Iterable<GolfCourseDao> courseDaoList = golfCourseRepo.findAll();
+
+		List<GolfCourse> courseList = new ArrayList<GolfCourse>();
+
+		for (GolfCourseDao course : courseDaoList) {
+			GolfCourse mappedCourse = GolfCourseMapper.DAOtoDTO(course);
+			courseList.add(mappedCourse);
+		}
+
+		return courseList;
+	}
+
+	@Override
+	public List<GolfHoles> findAllGolfHoles() {
+		Iterable<GolfHolesDao> holesDaoList = golfHolesRepo.findAll();
+
+		List<GolfHoles> holesList = new ArrayList<GolfHoles>();
+
+		for (GolfHolesDao hole : holesDaoList) {
+			GolfHoles holeMapper = GolfHolesMapper.DAOtoDTO(hole);
+			holesList.add(holeMapper);
+		}
+
+		return holesList;
+	}
+
+	@Override
+	public List<GolfTee> findAllGolfTee() {
+		Iterable<GolfTeeDao> teeDaoList = golfTeeRepo.findAll();
+		
+		List<GolfTee> teeList = new ArrayList<GolfTee>();
+		
+		for (GolfTeeDao tee : teeDaoList) {
+			GolfTee teeMapper = GolfTeeMapper.DAOtoDTO(tee);
+			teeList.add(teeMapper);
+		}
+
+		return teeList;
+	}
+
+	@Override
+	public List<Golf> findAllGolf() {
+		Iterable<GolfDao> golfDaoList = golfRepo.findAll();
+
+		List<Golf> golfList = new ArrayList<Golf>();
+
+		for (GolfDao golf : golfDaoList) {
+			Golf golfMapper = GolfMapper.DAOtoDTO(golf);
+			golfList.add(new Golf());
+		}
+
+		return golfList;
+	}
 
 }

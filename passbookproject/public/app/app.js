@@ -69,7 +69,7 @@ app.controller("passbookCtrl",function($scope, $http, $location, $document, $win
 				id: 3,
 				value: "White"
 			}
-		]
+		],
 
 		hole_list : function(){
 			var returnValue = new Array();
@@ -84,9 +84,14 @@ app.controller("passbookCtrl",function($scope, $http, $location, $document, $win
 
 
 	function init(){
-		$http.get("/changeStatus").then(function(response){
-			console.log("Change status reset");
-		})
+		// $http.get("/changeStatus").then(function(response){
+		// 	console.log("Change status reset");
+		// })
+		$http.get("/golfDetails").then(function(response){
+			$scope.data_properties = response.data;
+
+			console.log($scope.data_properties);
+		});
 	}
 
 	$scope.updatePassbook =function(){
@@ -107,20 +112,20 @@ app.controller("passbookCtrl",function($scope, $http, $location, $document, $win
 		$scope.user.gender = ""; 
 	}
 
-	if($location.absUrl().indexOf("update") === -1)
-		$interval(checkPassbookStatus, 1000);
+	// if($location.absUrl().indexOf("update") === -1)
+	// 	$interval(checkPassbookStatus, 1000);
 
 	
 
-	function checkPassbookStatus(){
-			$http.get("/passbookStatus").success(function(response){
+	// function checkPassbookStatus(){
+	// 		$http.get("/passbookStatus").success(function(response){
 
-				if(Boolean(response === 'true')){
+	// 			if(Boolean(response === 'true')){
 			
-					// window.location.href="/update";
-				}
-			});
-	}
+	// 				// window.location.href="/update";
+	// 			}
+	// 		});
+	// }
 
 	$scope.createPassbook = function(){
 
@@ -162,4 +167,6 @@ app.controller("passbookCtrl",function($scope, $http, $location, $document, $win
 
 
 	}
+
+	init();
 });

@@ -33,7 +33,7 @@ public class GeneratePass {
 		
 		for(GolfScore score: wallet){
 			totalScore += score.getScore();
-			scoreFields.add(new TextField("Hole ", score.getHoleNumber()+" - "+ score.getScore(), "3 Par, 7 Stroke, White Tee, 110 Yards"));
+			scoreFields.add(new TextField("hole", score.getHoleNumber()+" - "+ score.getScore(), score.getPar()+" Par, "+score.getStroke()+" 7 Stroke, "+score.getTeeType()+" White Tee, "+score.getYards()+" Yards"));
 		}
 		
 		properites = PassKitUtils.getProperties();

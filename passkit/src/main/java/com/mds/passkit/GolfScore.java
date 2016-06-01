@@ -8,7 +8,7 @@ public class GolfScore {
 	private int holeNumber;
 	private int par;
 	private int stroke;
-	private int teeType;
+	private String teeType;
 	private int yards;
 
 	private GolfWallet user;
@@ -17,7 +17,7 @@ public class GolfScore {
 
 	}
 
-	public GolfScore(int score, int holeNumber, int par, int stroke, int teeType, int yards, GolfWallet user) {
+	public GolfScore(int score, int holeNumber, int par, int stroke, String teeType, int yards, GolfWallet user) {
 		super();
 		this.score = score;
 		this.holeNumber = holeNumber;
@@ -44,11 +44,11 @@ public class GolfScore {
 		this.stroke = stroke;
 	}
 
-	public int getTeeType() {
+	public String getTeeType() {
 		return teeType;
 	}
 
-	public void setTeeType(int teeType) {
+	public void setTeeType(String teeType) {
 		this.teeType = teeType;
 	}
 

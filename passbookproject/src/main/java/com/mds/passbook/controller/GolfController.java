@@ -7,16 +7,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mds.passbook.bean.Golf;
@@ -46,6 +49,32 @@ public class GolfController {
 	
 	@Autowired
 	GolfService service;
+	
+	@RequestMapping(value="/golfDetails", method=RequestMethod.GET)
+	public @ResponseBody HashMap<String, List<?>> getGolfViewDetails(){
+		 
+		List<Object> response = new ArrayList<Object>();
+		
+		HashMap<String, List<?>> responseMap = new HashMap<>();
+
+		List<Golf> golf = service.findAllGolf();
+		List<GolfHoles> holes = service.findAllGolfHoles();
+		List<GolfTee> tees = service.findAllGolfTee();
+		List<GolfCourse> courses = service.findAllGolfCourses();
+		
+		List<String> genders = new ArrayList<String>();
+		genders.add("MALE");
+		genders.add("FEMALE");
+		
+		responseMap.put("golf", golf);
+		responseMap.put("hole_type_list", holes);
+		responseMap.put("golf_course_list", courses);
+		responseMap.put("genders", genders);
+		responseMap.put("tee_type_list", null); 
+		
+		return responseMap;
+		
+	}
 	
 	@RequestMapping(value="/user", method=RequestMethod.POST)
 	public String user(@RequestBody(required=true) GolfUser user, @RequestParam(name="target", required=true) String target){
