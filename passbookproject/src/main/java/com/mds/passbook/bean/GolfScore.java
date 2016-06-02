@@ -1,26 +1,11 @@
 package com.mds.passbook.bean;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-
 public class GolfScore {
 	
 	private int scoreId;
 	private int score;
 	private int holeNumber;
-//	private GolfTeeDetails golfTeeDetailsId;
+	private GolfTeeDetails golfTeeDetailsId;
 	private Golf golf;
 	
 	
@@ -37,12 +22,12 @@ public class GolfScore {
 	public void setScoreId(int scoreId) {
 		this.scoreId = scoreId;
 	}
-//	public GolfTeeDetails getGolfTeeDetailsId() {
-//		return golfTeeDetailsId;
-//	}
-//	public void setGolfTeeDetailsId(GolfTeeDetails golfTeeDetailsId) {
-//		this.golfTeeDetailsId = golfTeeDetailsId;
-//	}
+	public GolfTeeDetails getGolfTeeDetailsId() {
+		return golfTeeDetailsId;
+	}
+	public void setGolfTeeDetailsId(GolfTeeDetails golfTeeDetailsId) {
+		this.golfTeeDetailsId = golfTeeDetailsId;
+	}
 	public Golf getGolf() {
 		return golf;
 	}

@@ -12,8 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import org.hibernate.annotations.GeneratorType;
-
 @Entity(name="GOLF_TEE")
 public class GolfTeeDao extends AbstractDateStampEntity implements Serializable{
 

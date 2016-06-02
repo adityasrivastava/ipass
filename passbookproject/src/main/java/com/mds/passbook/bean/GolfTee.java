@@ -4,20 +4,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import com.googlecode.jmapper.annotations.JMap;
 
-import org.hibernate.annotations.GeneratorType;
+public class GolfTee implements Serializable{
 
-public class GolfTee {
-
+	@JMap
 	private int teeId;
+	@JMap
 	private String color;
+	@JMap
 	private List<GolfTeeDetails> teeDetails = new ArrayList<GolfTeeDetails>();
 	
 	public GolfTee(){

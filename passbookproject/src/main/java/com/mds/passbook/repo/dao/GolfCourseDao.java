@@ -2,17 +2,18 @@ package com.mds.passbook.repo.dao;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
+import com.googlecode.jmapper.annotations.JMapConversion;
+import com.mds.passbook.bean.Golf;
 
 @Entity(name="GOLF_COURSE")
 public class GolfCourseDao extends AbstractDateStampEntity implements Serializable{
@@ -43,18 +44,32 @@ public class GolfCourseDao extends AbstractDateStampEntity implements Serializab
 	public void setCourseName(String courseName) {
 		this.courseName = courseName;
 	}
-//	public List<Golf> getGolf() {
-//		return golf;
-//	}
-//	public void setGolf(List<Golf> golf) {
-//		this.golf = golf;
-//	}
+	public List<GolfDao> getGolf() {
+		return golf;
+	}
+	public void setGolf(List<GolfDao> golf) {
+		this.golf = golf;
+	}
 	public int getGolfCourseId() {
 		return golfCourseId;
 	}
 	public void setGolfCourseId(int golfCourseId) {
 		this.golfCourseId = golfCourseId;
 	}
+	
+	@JMapConversion(from={"golf"}, to={"golf"})
+	public List<Golf> conversion(List<GolfDao> golf){
+		
+//		List<Golf> dtoGolfList = new ArrayList<Golf>();
+//		
+//		for(GolfDao dao: golf){
+//			 Golf dtoGolf = new Golf();
+//			 dtoGolf = new 
+//		}
+		
+		return null;
+	}
+	
 	@Override
 	public String toString() {
 		return "GolfCourse [golfCourseId=" + golfCourseId + ", courseName=" + courseName + "]";

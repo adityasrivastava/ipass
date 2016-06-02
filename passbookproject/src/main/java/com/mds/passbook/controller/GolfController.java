@@ -1,20 +1,11 @@
 package com.mds.passbook.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,24 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mds.passbook.bean.Golf;
 import com.mds.passbook.bean.GolfCourse;
-import com.mds.passbook.bean.GolfGame;
 import com.mds.passbook.bean.GolfHoles;
 import com.mds.passbook.bean.GolfPass;
 import com.mds.passbook.bean.GolfScore;
 import com.mds.passbook.bean.GolfTee;
 import com.mds.passbook.bean.GolfUser;
-import com.mds.passbook.repo.GolfCourseRepository;
-import com.mds.passbook.repo.GolfHolesRepository;
-import com.mds.passbook.repo.GolfPassRepository;
-import com.mds.passbook.repo.GolfRepository;
-import com.mds.passbook.repo.GolfScoreRepository;
-import com.mds.passbook.repo.GolfTeeRepository;
-import com.mds.passbook.repo.GolfUserRepository;
-import com.mds.passbook.repo.dao.GolfDao;
-import com.mds.passbook.repo.dao.GolfScoreDao;
 import com.mds.passbook.service.GolfService;
-import com.mds.passkit.GeneratePass;
-import com.mds.passkit.GolfWallet;
 
 
 @RestController
@@ -62,15 +41,16 @@ public class GolfController {
 		List<GolfTee> tees = service.findAllGolfTee();
 		List<GolfCourse> courses = service.findAllGolfCourses();
 		
-		List<String> genders = new ArrayList<String>();
-		genders.add("MALE");
-		genders.add("FEMALE");
+		List<AbstractMap.SimpleEntry<String,String>> genders = new ArrayList<AbstractMap.SimpleEntry<String,String>>();
+		
+		genders.add(new AbstractMap.SimpleEntry<String,String>("value","Male"));
+		genders.add(new AbstractMap.SimpleEntry<String,String>("value","Female"));
 		
 		responseMap.put("golf", golf);
 		responseMap.put("hole_type_list", holes);
 		responseMap.put("golf_course_list", courses);
 		responseMap.put("genders", genders);
-		responseMap.put("tee_type_list", null); 
+		responseMap.put("tee_type_list", tees); 
 		
 		return responseMap;
 		

@@ -19,7 +19,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MimeType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,12 +74,14 @@ public class PushNotificationController{
 	
 	@RequestMapping(value="/passbookStatus", produces="text/html")
 	public String passbookStatus(){
-		return PassbookStatus.getInstance().getUpdateStatus().toString();
+		PassbookStatus.getInstance();
+		return PassbookStatus.getUpdateStatus().toString();
 	}
 	
 	@RequestMapping(value="/changeStatus")
 	public void changeStatus(){
-		PassbookStatus.getInstance().setUpdateStatus(false);
+		PassbookStatus.getInstance();
+		PassbookStatus.setUpdateStatus(false);
 	}
 
 	@RequestMapping(value="/createPassbook", method=RequestMethod.GET, produces="application/vnd.apple.pkpass")
@@ -197,7 +198,8 @@ public class PushNotificationController{
 		logger.info("Adding Passbook......");
 		logger.debug("DeviceLib: {} >>> PassType: {} >>> SerialNo.: {}",deviceLibraryIdentifier, passTypeIdentifier, serialNumber); 
 		logger.debug("Request: {}", payload);
-		PassbookStatus.getInstance().setUpdateStatus(true);
+		PassbookStatus.getInstance();
+		PassbookStatus.setUpdateStatus(true);
 		
 		token = payload.get("pushToken").toString();
 		logger.info("Push Token {}", token);
@@ -220,8 +222,8 @@ public class PushNotificationController{
 	@RequestMapping(value="/pushNotifications")
 	public void pushToken(@RequestParam(name="hole", required=true) String hole, @RequestParam(name="score", required=true) String score, @RequestParam(name="gameId") String gameId){
 		
-		this.hole = hole;
-		this.score = score;
+		PushNotificationController.hole = hole;
+		PushNotificationController.score = score;
 		
 		GolfScore golfScore;
 		golfScore = new GolfScore();
@@ -233,7 +235,8 @@ public class PushNotificationController{
 
 		PassbookNotification pushNotification = new PassbookNotification();
 		pushNotification.initialize(token);
-		PassbookStatus.getInstance().setUpdateStatus(false);
+		PassbookStatus.getInstance();
+		PassbookStatus.setUpdateStatus(false);
 		logger.info("Push notification initiated....");
 
 	}
@@ -335,7 +338,8 @@ public class PushNotificationController{
 		logger.info("Generating pass for update response....");
 		logger.debug("PassType: {} >>> SerialNo.: {}",passTypeIdentifier, serialNumber); 
 		logger.debug("Request: {}", payload);
-		PassbookStatus.getInstance().setUpdateStatus(true);
+		PassbookStatus.getInstance();
+		PassbookStatus.setUpdateStatus(true);
 		responseHeaders = new HttpHeaders();
 		generatePass = new GeneratePass();
 

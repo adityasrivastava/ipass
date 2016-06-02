@@ -1,33 +1,28 @@
 package com.mds.passbook.bean;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.validation.constraints.NotNull;
+import com.googlecode.jmapper.annotations.JMap;
+import com.googlecode.jmapper.annotations.JMapConversion;
+import com.mds.passbook.repo.dao.GolfCourseDao;
+import com.mds.passbook.repo.dao.GolfDao;
+import com.mds.passbook.repo.dao.GolfUserDao;
 
 public class Golf {
 	
+	@JMap
 	private int id;
+//	@JMap
 	private GolfUser usersId;
+	@JMap
 	private GolfCourse golfCoursesId;
+	@JMap
 	private GolfHoles holeTypesId;
+	@JMap
 	private GolfTee teeTypesId;
 
+//	@JMap
 	private List<GolfScore> scoresId = new ArrayList<GolfScore>();
 
 	
@@ -93,13 +88,11 @@ public class Golf {
 		this.teeTypesId = teeTypesId;
 	}
 
-
 	@Override
 	public String toString() {
 		return "Golf [id=" + id + ", usersId=" + usersId + ", golfCoursesId=" + golfCoursesId + ", holeTypesId="
 				+ holeTypesId + ", teeTypesId=" + teeTypesId + "]";
 	}
-	
-	
+
 
 }

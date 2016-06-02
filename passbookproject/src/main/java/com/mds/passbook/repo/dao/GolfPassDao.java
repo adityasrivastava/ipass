@@ -1,19 +1,15 @@
 package com.mds.passbook.repo.dao;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 @Entity(name = "GOLF_PASS")
 public class GolfPassDao extends AbstractDateStampEntity implements Serializable {
@@ -46,6 +42,16 @@ public class GolfPassDao extends AbstractDateStampEntity implements Serializable
 		this.token = token;
 		this.passAdded = passAdded;
 	}
+	
+	
+
+	public List<PassRegistrationsDao> getRegisteredPass() {
+		return registeredPass;
+	}
+
+	public void setRegisteredPass(List<PassRegistrationsDao> registeredPass) {
+		this.registeredPass = registeredPass;
+	}
 
 	public int getPassId() {
 		return passId;
@@ -66,15 +72,7 @@ public class GolfPassDao extends AbstractDateStampEntity implements Serializable
 	public GolfPassDao() {
 
 	}
-
-	public int getId() {
-		return passId;
-	}
-
-	public void setId(int passId) {
-		this.passId = passId;
-	}
-
+	
 	public String getToken() {
 		return token;
 	}

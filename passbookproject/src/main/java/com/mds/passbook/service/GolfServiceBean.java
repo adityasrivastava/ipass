@@ -16,10 +16,7 @@ import com.mds.passbook.bean.GolfTee;
 import com.mds.passbook.bean.GolfTeeDetails;
 import com.mds.passbook.bean.GolfUser;
 import com.mds.passbook.bean.PassRegistrations;
-import com.mds.passbook.mapper.GolfCourseMapper;
-import com.mds.passbook.mapper.GolfHolesMapper;
-import com.mds.passbook.mapper.GolfMapper;
-import com.mds.passbook.mapper.GolfTeeMapper;
+import com.mds.passbook.mapper.GolfMapperInterface;
 import com.mds.passbook.repo.GolfCourseRepository;
 import com.mds.passbook.repo.GolfHolesRepository;
 import com.mds.passbook.repo.GolfPassRegistrationsRepository;
@@ -343,7 +340,7 @@ public class GolfServiceBean implements GolfService {
 
 		passDao = new GolfPassDao();
 
-		passDao.setId(pass.getPassId());
+		passDao.setPassId(pass.getPassId());
 		passDao.setPassAdded(pass.isPassAdded());
 		passDao.setToken(pass.getToken());
 		passDao.setDeviceId(pass.getDeviceId());
@@ -480,7 +477,7 @@ public class GolfServiceBean implements GolfService {
 		List<GolfCourse> courseList = new ArrayList<GolfCourse>();
 
 		for (GolfCourseDao course : courseDaoList) {
-			GolfCourse mappedCourse = GolfCourseMapper.DAOtoDTO(course);
+			GolfCourse mappedCourse = GolfMapperInterface.INSTANCE.daoToDto(course);
 			courseList.add(mappedCourse);
 		}
 
@@ -494,7 +491,7 @@ public class GolfServiceBean implements GolfService {
 		List<GolfHoles> holesList = new ArrayList<GolfHoles>();
 
 		for (GolfHolesDao hole : holesDaoList) {
-			GolfHoles holeMapper = GolfHolesMapper.DAOtoDTO(hole);
+			GolfHoles holeMapper = GolfMapperInterface.INSTANCE.daoToDto(hole);
 			holesList.add(holeMapper);
 		}
 
@@ -508,7 +505,8 @@ public class GolfServiceBean implements GolfService {
 		List<GolfTee> teeList = new ArrayList<GolfTee>();
 		
 		for (GolfTeeDao tee : teeDaoList) {
-			GolfTee teeMapper = GolfTeeMapper.DAOtoDTO(tee);
+			GolfTee teeMapper = GolfMapperInterface.INSTANCE.daoToDto(tee);
+			System.out.println(tee);
 			teeList.add(teeMapper);
 		}
 
@@ -522,7 +520,7 @@ public class GolfServiceBean implements GolfService {
 		List<Golf> golfList = new ArrayList<Golf>();
 
 		for (GolfDao golf : golfDaoList) {
-			Golf golfMapper = GolfMapper.DAOtoDTO(golf);
+			Golf golfMapper =  GolfMapperInterface.INSTANCE.daoToDto(golf);
 			golfList.add(new Golf());
 		}
 

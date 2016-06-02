@@ -19,6 +19,7 @@
 		<jetty.version>9.3.8.v20160314</jetty.version>
 		<!-- https://www.eclipse.org/jetty/documentation/current/alpn-chapter.html#alpn-versions -->
 		<alpn-version>8.1.7.v20160121</alpn-version>
+		 <org.mapstruct.version>1.0.0.Final</org.mapstruct.version>
 	</properties>
 
 	<dependencies>
@@ -52,12 +53,25 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>6.0.2</version>
 		</dependency>
-
+		<!-- http://mvnrepository.com/artifact/com.googlecode.jmapper-framework/jmapper-core -->
+		
 		<dependency>
-			<groupId>net.sf.dozer</groupId>
-			<artifactId>dozer</artifactId>
-			<version>5.4.0</version>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct-jdk8</artifactId>
+        <version>${org.mapstruct.version}</version>
+    </dependency>
+		
+		<dependency>
+			<groupId>com.googlecode.jmapper-framework</groupId>
+			<artifactId>jmapper-core</artifactId>
+			<version>1.6.0</version>
 		</dependency>
+
+		<!-- http://mvnrepository.com/artifact/com.googlecode.jmapper-framework/jmapper-api -->
+		<!-- <dependency> <groupId>com.googlecode.jmapper-framework</groupId> <artifactId>jmapper-api</artifactId> 
+			<version>1.2.1</version> </dependency> -->
+		<!-- <dependency> <groupId>net.sf.dozer</groupId> <artifactId>dozer</artifactId> 
+			<version>5.4.0</version> </dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jetty</artifactId>
@@ -122,6 +136,35 @@
 
 	<build>
 		<plugins>
+		 <plugin>
+  <groupId>org.bsc.maven</groupId>
+  <artifactId>maven-processor-plugin</artifactId>
+  <version>2.2.4</version>
+            <configuration>
+                <defaultOutputDirectory>
+                    ${project.build.directory}/generated-sources
+                </defaultOutputDirectory>
+                <processors>
+                    <processor>org.mapstruct.ap.MappingProcessor</processor>
+                </processors>
+            </configuration>
+            <executions>
+                <execution>
+                    <id>process</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                        <goal>process</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <dependencies>
+                <dependency>
+                    <groupId>org.mapstruct</groupId>
+                    <artifactId>mapstruct-processor</artifactId>
+                    <version>${org.mapstruct.version}</version>
+                </dependency>
+            </dependencies>
+        </plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

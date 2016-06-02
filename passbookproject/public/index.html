@@ -54,7 +54,7 @@
 				</div>
 
 				<div class="golf-course-input-box col-sm-2">
-					<select class="form-control" name="gold_course" ng-model="user.golf_course" ng-options="course.value as course.value for course in data_properties.golf_course_list"> </select>
+					<select class="form-control" name="gold_course" ng-model="user.golf_course" ng-options="course.golfCourseId as course.courseName for course in data_properties.golf_course_list"> </select>
 				</div>	
 			</div>
 
@@ -76,7 +76,7 @@
 				</div>
 
 				<div class="hole-type-input-box col-sm-2">
-					<select class="form-control" name="hole_type" ng-model="user.hole_type" ng-options="hole_type.value as hole_type.value for hole_type in data_properties.hole_type_list"></select>
+					<select class="form-control" name="hole_type" ng-model="user.hole_type" ng-options="hole_type.holeTypeId as hole_type.holes for hole_type in data_properties.hole_type_list"></select>
 				</div>	
 			</div>
 
@@ -86,7 +86,7 @@
 				</div>
 
 				<div class="tee-type-input-box col-sm-2">
-					<select class="form-control" name="tee_type" ng-model="user.tee_type" ng-options="tee_type.value as tee_type.value for tee_type in data_properties.tee_type_list"></select>
+					<select class="form-control" name="tee_type" ng-model="user.tee_type" ng-options="tee_type.teeId as tee_type.color for tee_type in data_properties.tee_type_list"></select>
 				</div>	
 			</div>
 

@@ -89,8 +89,6 @@ app.controller("passbookCtrl",function($scope, $http, $location, $document, $win
 		// })
 		$http.get("/golfDetails").then(function(response){
 			$scope.data_properties = response.data;
-
-			console.log($scope.data_properties);
 		});
 	}
 
@@ -134,7 +132,7 @@ app.controller("passbookCtrl",function($scope, $http, $location, $document, $win
 			return;
 		}
 
-		$scope.urlPath ="/downloadPass?name="+$scope.user.name
+		$scope.urlPath ="/createPassbook?name="+$scope.user.name
 							+"&age="+$scope.user.age
 							+"&gender="+$scope.user.gender
 							+"&golf_course="+$scope.user.golf_course
