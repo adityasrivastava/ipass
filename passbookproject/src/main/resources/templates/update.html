@@ -43,7 +43,7 @@
 				</div>
 
 				<div class="game-input-box col-sm-2">
-					<select class="form-control" name="game" ng-model="user.golf" ng-options="hole.value as hole.value for hole in data_properties.golf"></select>
+					<select class="form-control" name="game" ng-model="user.golf" ng-options="golf.id as golf.id for golf in data_properties.golf"></select>
 				</div>	
 			</div>
 
@@ -54,7 +54,7 @@
 				</div>
 
 				<div class="hole-input-box col-sm-2">
-					<select class="form-control" name="hole" ng-model="user.hole" ng-options="hole.value as hole.value for hole in data_properties.hole_list"></select>
+					<select class="form-control" name="hole" ng-model="user.hole" ng-options="hole.holes as hole.holes for hole in data_properties.hole_type_list"></select>
 				</div>	
 			</div>
 

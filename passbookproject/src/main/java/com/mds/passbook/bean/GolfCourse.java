@@ -3,15 +3,10 @@ package com.mds.passbook.bean;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.googlecode.jmapper.annotations.JMap;
-
 public class GolfCourse {
 
-	@JMap
 	private int golfCourseId;
-	@JMap
 	private String courseName;
-	@JMap
 	private List<Golf> golf = new ArrayList<Golf>();
 
 	public GolfCourse() {

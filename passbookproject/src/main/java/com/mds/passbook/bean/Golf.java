@@ -3,26 +3,13 @@ package com.mds.passbook.bean;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.googlecode.jmapper.annotations.JMap;
-import com.googlecode.jmapper.annotations.JMapConversion;
-import com.mds.passbook.repo.dao.GolfCourseDao;
-import com.mds.passbook.repo.dao.GolfDao;
-import com.mds.passbook.repo.dao.GolfUserDao;
-
 public class Golf {
 	
-	@JMap
 	private int id;
-//	@JMap
 	private GolfUser usersId;
-	@JMap
 	private GolfCourse golfCoursesId;
-	@JMap
 	private GolfHoles holeTypesId;
-	@JMap
 	private GolfTee teeTypesId;
-
-//	@JMap
 	private List<GolfScore> scoresId = new ArrayList<GolfScore>();
 
 	

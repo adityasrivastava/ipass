@@ -3,13 +3,9 @@ package com.mds.passbook.bean;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.googlecode.jmapper.annotations.JMap;
-
 public class GolfHoles {
 
-	@JMap
 	private int holeTypeId;
-	@JMap
 	private int holes;
 
 	private List<Golf> golf = new ArrayList<Golf>();

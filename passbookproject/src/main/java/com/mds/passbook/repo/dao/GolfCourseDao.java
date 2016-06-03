@@ -12,9 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.googlecode.jmapper.annotations.JMapConversion;
-import com.mds.passbook.bean.Golf;
-
 @Entity(name="GOLF_COURSE")
 public class GolfCourseDao extends AbstractDateStampEntity implements Serializable{
 	
@@ -55,19 +52,6 @@ public class GolfCourseDao extends AbstractDateStampEntity implements Serializab
 	}
 	public void setGolfCourseId(int golfCourseId) {
 		this.golfCourseId = golfCourseId;
-	}
-	
-	@JMapConversion(from={"golf"}, to={"golf"})
-	public List<Golf> conversion(List<GolfDao> golf){
-		
-//		List<Golf> dtoGolfList = new ArrayList<Golf>();
-//		
-//		for(GolfDao dao: golf){
-//			 Golf dtoGolf = new Golf();
-//			 dtoGolf = new 
-//		}
-		
-		return null;
 	}
 	
 	@Override

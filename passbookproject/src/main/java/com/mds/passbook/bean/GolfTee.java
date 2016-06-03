@@ -4,15 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.googlecode.jmapper.annotations.JMap;
-
 public class GolfTee implements Serializable{
 
-	@JMap
 	private int teeId;
-	@JMap
 	private String color;
-	@JMap
 	private List<GolfTeeDetails> teeDetails = new ArrayList<GolfTeeDetails>();
 	
 	public GolfTee(){

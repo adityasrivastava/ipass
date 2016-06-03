@@ -89,6 +89,7 @@ app.controller("passbookCtrl",function($scope, $http, $location, $document, $win
 		// })
 		$http.get("/golfDetails").then(function(response){
 			$scope.data_properties = response.data;
+			console.log(response.data);
 		});
 	}
 

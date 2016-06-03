@@ -60,18 +60,7 @@
         <artifactId>mapstruct-jdk8</artifactId>
         <version>${org.mapstruct.version}</version>
     </dependency>
-		
-		<dependency>
-			<groupId>com.googlecode.jmapper-framework</groupId>
-			<artifactId>jmapper-core</artifactId>
-			<version>1.6.0</version>
-		</dependency>
 
-		<!-- http://mvnrepository.com/artifact/com.googlecode.jmapper-framework/jmapper-api -->
-		<!-- <dependency> <groupId>com.googlecode.jmapper-framework</groupId> <artifactId>jmapper-api</artifactId> 
-			<version>1.2.1</version> </dependency> -->
-		<!-- <dependency> <groupId>net.sf.dozer</groupId> <artifactId>dozer</artifactId> 
-			<version>5.4.0</version> </dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jetty</artifactId>

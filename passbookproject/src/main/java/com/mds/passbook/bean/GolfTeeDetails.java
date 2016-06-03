@@ -1,19 +1,13 @@
 package com.mds.passbook.bean;
 
 import java.io.Serializable;
-import com.googlecode.jmapper.annotations.JMap;
 
 public class GolfTeeDetails implements Serializable{
 	
-	@JMap
 	private int teeTypeId;
-	@JMap
 	private int holeNumber;
-	@JMap
 	private int yards;
-	@JMap
 	private int par;
-	@JMap
 	private int stroke;
 	
 	private GolfTee golfTee;
