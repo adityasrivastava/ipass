@@ -60,7 +60,7 @@ public interface GolfService {
 	void deleteGame(GolfDao golf);
 	void updateGame(GolfDao golf);
 	
-	void updateScore(GolfScore score);
+	GolfScore updateScore(GolfScore score);
 	
 	Iterable<GolfTeeDao> getAllTee();
 	void addTee(GolfTeeDao tee);

@@ -148,7 +148,7 @@ public class GolfServiceBean implements GolfService {
 	}
 
 	@Override
-	public void updateScore(GolfScore score) {
+	public GolfScore updateScore(GolfScore score) {
 
 		GolfScoreDao scoreDao;
 		GolfDao golfDao;
@@ -158,8 +158,12 @@ public class GolfServiceBean implements GolfService {
 		scoreDao = golfScoreRepo.findByGolfAndHoleNumber(golfDao, score.getHoleNumber());
 
 		scoreDao.setScore(score.getScore());
+		
+		scoreDao = golfScoreRepo.save(scoreDao);
+		
+		score = GolfMapper.INSTANCE.GolfScoreDAOtoGolfScoreDTO(scoreDao);
 
-		golfScoreRepo.save(scoreDao);
+		return score;
 	}
 
 	@Override

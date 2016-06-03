@@ -124,6 +124,14 @@
 	</dependencies>
 
 	<build>
+<!-- 	<resources>
+		<resource>
+			<directory>public/</directory>
+		</resource>
+		<resource>
+			<directory>src/main/resources</directory>
+		</resource>
+	</resources> -->
 		<plugins>
 		 <plugin>
   <groupId>org.bsc.maven</groupId>

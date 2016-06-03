@@ -2,7 +2,6 @@ package com.mds.passbook.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
@@ -28,140 +27,78 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mds.passbook.bean.GameUpdate;
 import com.mds.passbook.bean.Golf;
-import com.mds.passbook.bean.GolfGame;
 import com.mds.passbook.bean.GolfPass;
 import com.mds.passbook.bean.GolfScore;
-import com.mds.passbook.bean.GolfUser;
 import com.mds.passbook.bean.PassRegistrations;
 import com.mds.passbook.notification.PassbookNotification;
 import com.mds.passbook.repo.dao.GolfDao;
 import com.mds.passbook.repo.dao.GolfScoreDao;
 import com.mds.passbook.repo.dao.PassRegistrationsDao;
 import com.mds.passbook.service.GolfService;
+import com.mds.passbook.service.PassbookService;
 import com.mds.passkit.GeneratePass;
 import com.mds.passkit.GolfWallet;
 
 /**
- * Apple Wallet webservice which allow Update, Delete, Add new Pass to wallet of an iOS device
+ * Apple Wallet webservice which allow Update, Delete, Add new Pass to wallet of
+ * an iOS device
  * 
  * @author adityasrivastava
  *
  */
 @RestController
-public class PushNotificationController{
-	
+public class PushNotificationController {
+
 	public static final Logger logger = LoggerFactory.getLogger(PushNotificationController.class);
 	public static String token = "15c19c99888bed405f91785e4140b9f267c3f8fc191556ae562fb96ab31f83f4";
-	
+
 	private static String username;
 	private static String userAge;
 	private static String userGender;
 	private static String holeType;
 	private static String hole;
 	private static String score;
-	
+
 	@Autowired
 	GolfService golfService;
 	
-	
+	@Autowired
+	PassbookService passbookService;
+
 	/**
 	 * Check Server status
 	 */
-	@RequestMapping(value="/serverStatus", method=RequestMethod.GET, produces="text/html")
-	public String serverStatus(){
+	@RequestMapping(value = "/serverStatus", method = RequestMethod.GET, produces = "text/html")
+	public String serverStatus() {
 		return "Server Working...";
 	}
-	
-	@RequestMapping(value="/passbookStatus", produces="text/html")
-	public String passbookStatus(){
+
+	@RequestMapping(value = "/passbookStatus", produces = "text/html")
+	public String passbookStatus() {
 		PassbookStatus.getInstance();
 		return PassbookStatus.getUpdateStatus().toString();
 	}
-	
-	@RequestMapping(value="/changeStatus")
-	public void changeStatus(){
+
+	@RequestMapping(value = "/changeStatus")
+	public void changeStatus() {
 		PassbookStatus.getInstance();
 		PassbookStatus.setUpdateStatus(false);
 	}
 
-	@RequestMapping(value="/createPassbook", method=RequestMethod.GET, produces="application/vnd.apple.pkpass")
-	public ResponseEntity<InputStreamResource> createPass (@RequestParam(name="name", required=false) String name,
-							@RequestParam(name="age", required=false) String age, 
-							@RequestParam(name="gender", required=false) String gender,
-							@RequestParam(name="golf_course", required=false) String golf_course,
-							@RequestParam(name="hole_type", required=false) String hole_type,
-							@RequestParam(name="tee_type", required=false) String tee_type,
-							@RequestParam(name="handicap", required=false) String handicap
-							   ) throws IOException{
-	
-		GolfUser user = new GolfUser();
-		user.setAge(Integer.parseInt(age));
-		user.setGender(gender);
-		user.setHandicap(Integer.parseInt(handicap));
-		user.setName(name);
+	@RequestMapping(value = "/createPassbook", method = RequestMethod.GET, produces = "application/vnd.apple.pkpass")
+	public ResponseEntity<InputStreamResource> createPass(@RequestParam(name = "name", required = false) String name,
+			@RequestParam(name = "age", required = false) String age,
+			@RequestParam(name = "gender", required = false) String gender,
+			@RequestParam(name = "golf_course", required = false) String golf_course,
+			@RequestParam(name = "hole_type", required = false) String hole_type,
+			@RequestParam(name = "tee_type", required = false) String tee_type,
+			@RequestParam(name = "handicap", required = false) String handicap) throws IOException {
 
-		user = golfService.addUser(user);
-		
-		
-		GolfGame golf;
-		
-		golf = new GolfGame();
-		golf.setCourseId(Integer.parseInt(golf_course));
-		golf.setHoleTypeId(Integer.parseInt(hole_type));
-		golf.setTeeTypeId(Integer.parseInt(tee_type));
-		golf.setUserId(user.getUserId());
-		golf.setPassTypeId("pass.com.mds.passbookapp");
-		
-		String response;
-		List<GolfScoreDao>  dao = null;
-		
-		GolfWallet wallet = new GolfWallet();
-		
-		dao = golfService.addGolf(golf);
-		
-		GolfDao golfDao = dao.get(0).getGolf();
-
-		File newPass;
-		InputStream passInputStream = null;
 		HttpHeaders responseHeaders;
-		GeneratePass generatePass;
+		InputStream passInputStream = null;
 
 		responseHeaders = new HttpHeaders();
-		generatePass = new GeneratePass();
-		
-		wallet.setSerialNumber(""+golfDao.getId());
-		wallet.setUserName(golfDao.getUsersId().getName());
-		wallet.setUserGender(golfDao.getUsersId().getGender());
-		wallet.setUserAge(""+golfDao.getUsersId().getAge());
-		wallet.setGolfHoleType(""+golfDao.getHoleTypesId().getHoles());
-		
-		List<com.mds.passkit.GolfScore> scores = new ArrayList<com.mds.passkit.GolfScore>();
-		
-		int par = 0; 
-		int stroke = 0;
-		int teeType = 0; 
-		int yards = 0;
-		
-		for(GolfScoreDao scoreDao: dao){
-			scores.add(new com.mds.passkit.GolfScore(scoreDao.getScore(), scoreDao.getHoleNumber(), scoreDao.getGolfTeeDetailsId().getPar(), scoreDao.getGolfTeeDetailsId().getStroke(), scoreDao.getGolfTeeDetailsId().getGolfTee().getColor(), scoreDao.getGolfTeeDetailsId().getYards() , wallet));
-		}
-		
-		// Create Pass
-		try {
-			generatePass.createGenericPass("passes/file3.pkpass", scores);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		// Get new generated pass
-		newPass = new File("passes/file3.pkpass");
-		
-	
-		try {
-			passInputStream = new FileInputStream(newPass);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		passInputStream = passbookService.createPassbook(name, age, gender, golf_course, hole_type, tee_type, handicap);
 
 		// Setup headers for 0 expiry and no cache
 		responseHeaders.add("Cache-Control", "no-cache, no-store, must-revalidate");
@@ -169,69 +106,72 @@ public class PushNotificationController{
 		responseHeaders.add("Expires", "0");
 		responseHeaders.setContentDispositionFormData("filename", "file1.pkpass");
 		responseHeaders.setLastModified(new Date().getTime());
-	
+
 		// Send in response
-		return ResponseEntity
-	            .ok()
-	            .headers(responseHeaders)
-	            .contentLength(newPass.length())
-	            .body(new InputStreamResource(passInputStream));
-		
+		return ResponseEntity.ok().headers(responseHeaders).contentLength(passbookService.getFileSize())
+				.body(new InputStreamResource(passInputStream));
+
 	}
-	
+
 	/**
-	 * To Add newly register pass of a device with push token 
+	 * To Add newly register pass of a device with push token
 	 * 
-	 * @param deviceLibraryIdentifier - Device UUID ( DeviceId )
-	 * @param passTypeIdentifier - Pass Type Id ( Bundle Id )
-	 * @param serialNumber - Pass Serial Number
-	 * @param payload - Wallet request body with Push Token ( Device Token )
+	 * @param deviceLibraryIdentifier
+	 *            - Device UUID ( DeviceId )
+	 * @param passTypeIdentifier
+	 *            - Pass Type Id ( Bundle Id )
+	 * @param serialNumber
+	 *            - Pass Serial Number
+	 * @param payload
+	 *            - Wallet request body with Push Token ( Device Token )
 	 * @return 201 Status
 	 */
-	@RequestMapping(value="/v1/devices/{deviceLibraryIdentifier}/registrations/{passTypeIdentifier}/{serialNumber}", method=RequestMethod.POST)
-	public ResponseEntity<String> addPassbook(
-			@PathVariable("deviceLibraryIdentifier") String deviceLibraryIdentifier,
+	@RequestMapping(value = "/v1/devices/{deviceLibraryIdentifier}/registrations/{passTypeIdentifier}/{serialNumber}", method = RequestMethod.POST)
+	public ResponseEntity<String> addPassbook(@PathVariable("deviceLibraryIdentifier") String deviceLibraryIdentifier,
 			@PathVariable("passTypeIdentifier") String passTypeIdentifier,
 			@PathVariable("serialNumber") String serialNumber,
-			@RequestBody(required=false) Map<String, Object> payload){
-		
+			@RequestBody(required = false) Map<String, Object> payload) {
+
 		logger.info("Adding Passbook......");
-		logger.debug("DeviceLib: {} >>> PassType: {} >>> SerialNo.: {}",deviceLibraryIdentifier, passTypeIdentifier, serialNumber); 
+		logger.debug("DeviceLib: {} >>> PassType: {} >>> SerialNo.: {}", deviceLibraryIdentifier, passTypeIdentifier,
+				serialNumber);
 		logger.debug("Request: {}", payload);
 		PassbookStatus.getInstance();
 		PassbookStatus.setUpdateStatus(true);
-		
+
 		token = payload.get("pushToken").toString();
 		logger.info("Push Token {}", token);
-		
+
 		GolfPass pass = new GolfPass();
 		pass.setDeviceId(Integer.parseInt(deviceLibraryIdentifier));
 		pass.setPassAdded(true);
 		pass.setToken(token);
-		
+
 		golfService.updateGolfPass(pass);
 
 		return new ResponseEntity<String>(HttpStatus.CREATED);
 	}
-	
 
 	/**
-	 * Send a push notification to APN server for new updates notification to 
+	 * Send a push notification to APN server for new updates notification to
 	 * devices with registered passes
 	 */
-	@RequestMapping(value="/pushNotifications")
-	public void pushToken(@RequestParam(name="hole", required=true) String hole, @RequestParam(name="score", required=true) String score, @RequestParam(name="gameId") String gameId){
-		
+	@RequestMapping(value = "/pushNotifications")
+	public void pushToken(@RequestParam(name = "hole", required = true) String hole,
+			@RequestParam(name = "score", required = true) String score, @RequestParam(name = "gameId") String gameId) {
+
 		PushNotificationController.hole = hole;
 		PushNotificationController.score = score;
-		
+
 		GolfScore golfScore;
 		golfScore = new GolfScore();
 		golfScore.setHoleNumber(Integer.parseInt(hole));
 		golfScore.setGolf(new Golf(Integer.parseInt(gameId)));
 		golfScore.setScore(Integer.parseInt(score));
+
+		golfScore = golfService.updateScore(golfScore);
 		
-		golfService.updateScore(golfScore);
+		System.out.println(golfScore);
 
 		PassbookNotification pushNotification = new PassbookNotification();
 		pushNotification.initialize(token);
@@ -240,91 +180,95 @@ public class PushNotificationController{
 		logger.info("Push notification initiated....");
 
 	}
+
 	/**
-	 * Send response with list of serial number of pass which have been recently updated 
-	 * with last update timestamp in JSON
+	 * Send response with list of serial number of pass which have been recently
+	 * updated with last update timestamp in JSON
 	 * 
-	 * @param deviceLibraryIdentifier - Device UUID ( DeviceId )
-	 * @param passTypeIdentifier - Pass Type Id ( Bundle Id )
-	 * @param passesUpdatedSince - Updated last timestamp
-	 * @param payload - Wallet request body
+	 * @param deviceLibraryIdentifier
+	 *            - Device UUID ( DeviceId )
+	 * @param passTypeIdentifier
+	 *            - Pass Type Id ( Bundle Id )
+	 * @param passesUpdatedSince
+	 *            - Updated last timestamp
+	 * @param payload
+	 *            - Wallet request body
 	 * @return JSON string with serial number array and lastUpdated
 	 */
-	
-	@RequestMapping(value="/v1/devices/{deviceLibraryIdentifier}/registrations/{passTypeIdentifier}", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+
+	@RequestMapping(value = "/v1/devices/{deviceLibraryIdentifier}/registrations/{passTypeIdentifier}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> getSerialIdsOfPassForDevice(
-							   @PathVariable("deviceLibraryIdentifier") String deviceLibraryIdentifier,
-							   @PathVariable("passTypeIdentifier") String passTypeIdentifier,
-							   @RequestParam(value="passesUpdatedSince", required=false) String passesUpdatedSince,
-							   @RequestBody(required=false) Map<String, Object> payload){
-		
+			@PathVariable("deviceLibraryIdentifier") String deviceLibraryIdentifier,
+			@PathVariable("passTypeIdentifier") String passTypeIdentifier,
+			@RequestParam(value = "passesUpdatedSince", required = false) String passesUpdatedSince,
+			@RequestBody(required = false) Map<String, Object> payload) {
+
 		logger.info("Sending list of serial no. request for update....");
-		logger.debug("DeviceLib: {} >>> PassType: {}",deviceLibraryIdentifier, passTypeIdentifier); 
-		
-		if(passesUpdatedSince !=null){
-			logger.debug("Update Tag: "+passesUpdatedSince);
+		logger.debug("DeviceLib: {} >>> PassType: {}", deviceLibraryIdentifier, passTypeIdentifier);
+
+		if (passesUpdatedSince != null) {
+			logger.debug("Update Tag: " + passesUpdatedSince);
 		}
-		
+
 		logger.debug("Request: {}", payload);
-		
+
 		List<PassRegistrationsDao> register = golfService.findUpdatedPass(passTypeIdentifier, deviceLibraryIdentifier);
 		GameUpdate update = new GameUpdate();
 		update.setLastUpdated(update.currentTimeStamp());
-		
-		for(PassRegistrationsDao passRegi: register){
+
+		for (PassRegistrationsDao passRegi : register) {
 			update.getSerialNumbers().add(passRegi.getSerialNumber());
 		}
-		
-		
-		return new ResponseEntity<String>("{\"serialNumbers\": [\"2221\"], \"lastUpdated\" : \""+new Timestamp(System.currentTimeMillis() - (1000 * 60 * 60))+"\"}", HttpStatus.OK);
+
+		return new ResponseEntity<String>("{\"serialNumbers\": [\"2221\"], \"lastUpdated\" : \""
+				+ new Timestamp(System.currentTimeMillis() - (1000 * 60 * 60)) + "\"}", HttpStatus.OK);
 	}
-	
+
 	/**
 	 * 
-	 * @param deviceLibraryIdentifier - Device UUID ( DeviceId )
-	 * @param passTypeIdentifier - Pass Type Id ( Bundle Id )
+	 * @param deviceLibraryIdentifier
+	 *            - Device UUID ( DeviceId )
+	 * @param passTypeIdentifier
+	 *            - Pass Type Id ( Bundle Id )
 	 * @return updated new pass in response to device
 	 * @throws IOException
 	 */
-	@RequestMapping(value="/v1/passes/{passTypeIdentifier}/{serialNumber}", method=RequestMethod.GET)
-	public ResponseEntity<InputStreamResource> updatePassbook (
-							   @PathVariable("passTypeIdentifier") String passTypeIdentifier,
-							   @PathVariable("serialNumber") String serialNumber,
-							   @RequestBody(required=false) Map<String, Object> payload) throws IOException{
+	@RequestMapping(value = "/v1/passes/{passTypeIdentifier}/{serialNumber}", method = RequestMethod.GET)
+	public ResponseEntity<InputStreamResource> updatePassbook(
+			@PathVariable("passTypeIdentifier") String passTypeIdentifier,
+			@PathVariable("serialNumber") String serialNumber,
+			@RequestBody(required = false) Map<String, Object> payload) throws IOException {
 		File newPass;
 		InputStream passInputStream = null;
 		HttpHeaders responseHeaders;
 		GeneratePass generatePass;
-		
-		List<GolfScoreDao>  dao = null;
-		
+
+		List<GolfScoreDao> dao = null;
 
 		GolfWallet wallet = new GolfWallet();
-		
+
 		dao = golfService.getScoresById(Integer.parseInt(serialNumber));
-		
+
 		GolfDao golfDao = dao.get(0).getGolf();
 
 		responseHeaders = new HttpHeaders();
 		generatePass = new GeneratePass();
-		
-		wallet.setSerialNumber(""+golfDao.getId());
+
+		wallet.setSerialNumber("" + golfDao.getId());
 		wallet.setUserName(golfDao.getUsersId().getName());
 		wallet.setUserGender(golfDao.getUsersId().getGender());
-		wallet.setUserAge(""+golfDao.getUsersId().getAge());
-		wallet.setGolfHoleType(""+golfDao.getHoleTypesId().getHoles());
-		
+		wallet.setUserAge("" + golfDao.getUsersId().getAge());
+		wallet.setGolfHoleType("" + golfDao.getHoleTypesId().getHoles());
+
 		List<com.mds.passkit.GolfScore> scores = new ArrayList<com.mds.passkit.GolfScore>();
-		
-		int par = 0; 
-		int stroke = 0;
-		int teeType = 0; 
-		int yards = 0;
-		
-		for(GolfScoreDao scoreDao: dao){
-			scores.add(new com.mds.passkit.GolfScore(scoreDao.getScore(), scoreDao.getHoleNumber(), scoreDao.getGolfTeeDetailsId().getPar(), scoreDao.getGolfTeeDetailsId().getStroke(), scoreDao.getGolfTeeDetailsId().getGolfTee().getColor(), scoreDao.getGolfTeeDetailsId().getYards() , wallet));
+
+		for (GolfScoreDao scoreDao : dao) {
+			scores.add(new com.mds.passkit.GolfScore(scoreDao.getScore(), scoreDao.getHoleNumber(),
+					scoreDao.getGolfTeeDetailsId().getPar(), scoreDao.getGolfTeeDetailsId().getStroke(),
+					scoreDao.getGolfTeeDetailsId().getGolfTee().getColor(), scoreDao.getGolfTeeDetailsId().getYards(),
+					wallet));
 		}
-		
+
 		// Create Pass
 		try {
 			generatePass.createGenericPass("passes/file3.pkpass", scores);
@@ -332,11 +276,8 @@ public class PushNotificationController{
 			e.printStackTrace();
 		}
 
-		
-		
-	
 		logger.info("Generating pass for update response....");
-		logger.debug("PassType: {} >>> SerialNo.: {}",passTypeIdentifier, serialNumber); 
+		logger.debug("PassType: {} >>> SerialNo.: {}", passTypeIdentifier, serialNumber);
 		logger.debug("Request: {}", payload);
 		PassbookStatus.getInstance();
 		PassbookStatus.setUpdateStatus(true);
@@ -357,48 +298,47 @@ public class PushNotificationController{
 		responseHeaders.setLastModified(new Date().getTime());
 
 		// Send in response
-		return ResponseEntity
-	            .ok()
-	            .headers(responseHeaders)
-	            .contentLength(newPass.length())
-	            .body(new InputStreamResource(passInputStream));
+		return ResponseEntity.ok().headers(responseHeaders).contentLength(newPass.length())
+				.body(new InputStreamResource(passInputStream));
 	}
-	
+
 	/**
 	 * 
-	 * @param deviceLibraryIdentifier - Device UUID ( DeviceId )
-	 * @param passTypeIdentifier - Pass Type Id ( Bundle Id )
-	 * @param serialNumber - Pass Serial Number
-	 * @return 200 Status 
+	 * @param deviceLibraryIdentifier
+	 *            - Device UUID ( DeviceId )
+	 * @param passTypeIdentifier
+	 *            - Pass Type Id ( Bundle Id )
+	 * @param serialNumber
+	 *            - Pass Serial Number
+	 * @return 200 Status
 	 */
-	@RequestMapping(value="/v1/devices/{deviceLibraryIdentifier}/registrations/{passTypeIdentifier}/{serialNumber}", method=RequestMethod.DELETE)
+	@RequestMapping(value = "/v1/devices/{deviceLibraryIdentifier}/registrations/{passTypeIdentifier}/{serialNumber}", method = RequestMethod.DELETE)
 	public ResponseEntity<String> deletePassbook(
-							   @PathVariable("deviceLibraryIdentifier") String deviceLibraryIdentifier,
-							   @PathVariable("passTypeIdentifier") String passTypeIdentifier,
-							   @PathVariable("serialNumber") String serialNumber,
-							   @RequestBody(required=false) Map<String, Object> payload){
-		
+			@PathVariable("deviceLibraryIdentifier") String deviceLibraryIdentifier,
+			@PathVariable("passTypeIdentifier") String passTypeIdentifier,
+			@PathVariable("serialNumber") String serialNumber,
+			@RequestBody(required = false) Map<String, Object> payload) {
+
 		logger.info("Delete pass as requested by user.....");
-		logger.debug("DeviceLib: {} >>> PassType: {} >>> SerialNo.: {}",deviceLibraryIdentifier, passTypeIdentifier, serialNumber); 
+		logger.debug("DeviceLib: {} >>> PassType: {} >>> SerialNo.: {}", deviceLibraryIdentifier, passTypeIdentifier,
+				serialNumber);
 		logger.debug("Request: {}", payload);
-		
+
 		PassRegistrations registrations = new PassRegistrations();
 		registrations.setPassTypeId(passTypeIdentifier);
 		registrations.setSerialNumber(serialNumber);
-		
+
 		golfService.deletePassRegistrations(registrations);
-		
-		
+
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
-	
+
 	/**
 	 * Logging device errors from request body sent by a particular Device
 	 */
-	@RequestMapping(value="/v1/log", method=RequestMethod.POST)
-	public void logPassbookErrors(
-							   @RequestBody Map<String, Object> payload){
-		
+	@RequestMapping(value = "/v1/log", method = RequestMethod.POST)
+	public void logPassbookErrors(@RequestBody Map<String, Object> payload) {
+
 		logger.info("Request: {}", payload);
 
 	}

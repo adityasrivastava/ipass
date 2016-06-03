@@ -28,12 +28,13 @@ public class GeneratePass {
 		
 		List<Field<?>> scoreFields = new ArrayList<>();
 		int totalScore = 0;
-		
+		int count = 0;
 		scoreFields.add(new DateField("datetime", "Date & Time", new Date()));
 		
 		for(GolfScore score: wallet){
 			totalScore += score.getScore();
-			scoreFields.add(new TextField("hole", score.getHoleNumber()+" - "+ score.getScore(), score.getPar()+" Par, "+score.getStroke()+" 7 Stroke, "+score.getTeeType()+" White Tee, "+score.getYards()+" Yards"));
+			String fieldText = score.getHoleNumber()+" - "+ score.getScore() +" , "+ score.getPar()+" Par, "+score.getStroke()+" 7 Stroke, "+score.getTeeType()+" White Tee, "+score.getYards()+" Yards";
+			scoreFields.add(new TextField("hole_"+count++,"hole_"+count, fieldText));
 		}
 		
 		properites = PassKitUtils.getProperties();
@@ -47,7 +48,7 @@ public class GeneratePass {
 	      try {
 	        aviva.generateStorePass(passLocation, "12345678912345678", wallet.get(0).getUser().getSerialNumber(),  new Generic()
 	        	      .headerFields(changeField)
-	        	      .primaryFields(new TextField())
+	        	      .primaryFields(new TextField("course_name","Course","Hamani Golf"))
 	        	      .auxiliaryFields(
 	        	    		  new TextField("game","Game", wallet.get(0).getUser().getGolfHoleType()).textAlignment(TextAlignment.LEFT),
 	        	              new TextField("par", "Par", ""+totalScore).textAlignment(TextAlignment.RIGHT)
@@ -56,9 +57,8 @@ public class GeneratePass {
 	        	    		  new TextField("age","Age", wallet.get(0).getUser().getUserGender().charAt(0)+wallet.get(0).getUser().getUserAge()).textAlignment(TextAlignment.LEFT),
 	        	              new TextField("name", "Name", ""+wallet.get(0).getUser().getUserName()).textAlignment(TextAlignment.RIGHT)
 	        	    		 )
-	        	      .backFields(
-	        	    		  scoreFields
-	        	      ));
+	        	      .backFields(scoreFields)
+	        	    );
 	      } catch (PasskitException e) {
 	        e.printStackTrace();
 	      }
