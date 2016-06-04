@@ -14,7 +14,7 @@ public interface GolfPassMapper {
 		@Mapping(source="token", target="token"),
 		@Mapping(source="deviceId", target="deviceId"),
 		@Mapping(source="passAdded", target="passAdded"),
-		@Mapping(source="registeredPass", target="registeredPass")
+		@Mapping(source="registeredPass", target="registeredPass", ignore=true)
 	})
 	GolfPass GolfPassDAOtoGolfPassDTO(GolfPassDao pass);
 	

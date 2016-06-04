@@ -141,13 +141,8 @@ public class PushNotificationController {
 
 		token = payload.get("pushToken").toString();
 		logger.info("Push Token {}", token);
-
-		GolfPass pass = new GolfPass();
-		pass.setDeviceId(Integer.parseInt(deviceLibraryIdentifier));
-		pass.setPassAdded(true);
-		pass.setToken(token);
-
-		golfService.updateGolfPass(pass);
+		
+		passbookService.addPassbook(serialNumber, deviceLibraryIdentifier, passTypeIdentifier, token);
 
 		return new ResponseEntity<String>(HttpStatus.CREATED);
 	}
@@ -163,16 +158,8 @@ public class PushNotificationController {
 		PushNotificationController.hole = hole;
 		PushNotificationController.score = score;
 
-		GolfScore golfScore;
-		golfScore = new GolfScore();
-		golfScore.setHoleNumber(Integer.parseInt(hole));
-		golfScore.setGolf(new Golf(Integer.parseInt(gameId)));
-		golfScore.setScore(Integer.parseInt(score));
-
-		golfScore = golfService.updateScore(golfScore);
-		
-		System.out.println(golfScore);
-
+		String token = passbookService.updateGolfScore(hole, score, gameId);
+		System.out.println("Token --> "+token);
 		PassbookNotification pushNotification = new PassbookNotification();
 		pushNotification.initialize(token);
 		PassbookStatus.getInstance();
@@ -196,8 +183,8 @@ public class PushNotificationController {
 	 * @return JSON string with serial number array and lastUpdated
 	 */
 
-	@RequestMapping(value = "/v1/devices/{deviceLibraryIdentifier}/registrations/{passTypeIdentifier}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> getSerialIdsOfPassForDevice(
+	@RequestMapping(value = "/v1/devices/{deviceLibraryIdentifier}/registrations/{passTypeIdentifier:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GameUpdate> getSerialIdsOfPassForDevice(
 			@PathVariable("deviceLibraryIdentifier") String deviceLibraryIdentifier,
 			@PathVariable("passTypeIdentifier") String passTypeIdentifier,
 			@RequestParam(value = "passesUpdatedSince", required = false) String passesUpdatedSince,
@@ -212,16 +199,25 @@ public class PushNotificationController {
 
 		logger.debug("Request: {}", payload);
 
-		List<PassRegistrationsDao> register = golfService.findUpdatedPass(passTypeIdentifier, deviceLibraryIdentifier);
+		List<PassRegistrations> register = golfService.findUpdatedPass(passTypeIdentifier, deviceLibraryIdentifier);
+		List<String> serialNumbersList = new ArrayList<String>();
+		
+		
 		GameUpdate update = new GameUpdate();
 		update.setLastUpdated(update.currentTimeStamp());
 
-		for (PassRegistrationsDao passRegi : register) {
-			update.getSerialNumbers().add(passRegi.getSerialNumber());
+		for (PassRegistrations passRegi : register) {
+			serialNumbersList.add(passRegi.getSerialNumber());
 		}
+		
+		String[] passRegistrationsArr = serialNumbersList.toArray(new String[serialNumbersList.size()]);
+		
+		update.setSerialNumbers(passRegistrationsArr);
+		
+		return new ResponseEntity<GameUpdate>(update, HttpStatus.OK);
 
-		return new ResponseEntity<String>("{\"serialNumbers\": [\"2221\"], \"lastUpdated\" : \""
-				+ new Timestamp(System.currentTimeMillis() - (1000 * 60 * 60)) + "\"}", HttpStatus.OK);
+//		return new ResponseEntity<String>("{\"serialNumbers\": [\"2221\"], \"lastUpdated\" : \""
+//				+ new Timestamp(System.currentTimeMillis() - (1000 * 60 * 60)) + "\"}", HttpStatus.OK);
 	}
 
 	/**

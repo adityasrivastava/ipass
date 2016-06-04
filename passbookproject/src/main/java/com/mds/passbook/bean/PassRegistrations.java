@@ -55,4 +55,11 @@ public class PassRegistrations {
 		this.serialNumber = serialNumber;
 	}
 
+	@Override
+	public String toString() {
+		return "PassRegistrations [registerPassId=" + registerPassId + ", passTypeId=" + passTypeId + ", serialNumber="
+				+ serialNumber + ", pass=" + pass + "]";
+	}
+
+	
 }

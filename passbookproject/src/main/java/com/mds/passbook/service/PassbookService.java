@@ -12,5 +12,9 @@ public interface PassbookService {
 	long getFileSize();
 	void generatePass(String absolutePath, List<com.mds.passkit.GolfScore> scores);
 	InputStream readPassFile(String relativePath);
+	
+	void addPassbook(String serialNumber, String deviceId, String passTypeId, String pushToken);
+	String updateGolfScore(String hole, String score, String gameId);
+	
 
 }

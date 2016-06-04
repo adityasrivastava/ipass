@@ -97,7 +97,7 @@ app.controller("passbookCtrl",function($scope, $http, $location, $document, $win
 
 			$scope.update = "";
 
-		var pushUrl="/pushNotifications?hole="+$scope.user.hole+"&score="+$scope.user.score;
+		var pushUrl="/pushNotifications?hole="+$scope.user.hole+"&score="+$scope.user.score+"&gameId="+$scope.user.gameId;
 
 		$http.get(pushUrl).then(function(response){
 				$scope.update = "Pust Notification Successful";

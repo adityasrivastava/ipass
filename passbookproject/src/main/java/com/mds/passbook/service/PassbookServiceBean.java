@@ -11,8 +11,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.mds.passbook.bean.Golf;
 import com.mds.passbook.bean.GolfGame;
+import com.mds.passbook.bean.GolfPass;
+import com.mds.passbook.bean.GolfScore;
 import com.mds.passbook.bean.GolfUser;
+import com.mds.passbook.bean.PassRegistrations;
 import com.mds.passbook.repo.dao.GolfDao;
 import com.mds.passbook.repo.dao.GolfScoreDao;
 import com.mds.passkit.GeneratePass;
@@ -50,6 +54,7 @@ public class PassbookServiceBean implements PassbookService{
 		user.setGender(gender);
 		user.setHandicap(Integer.parseInt(handicap));
 		user.setName(name);
+		user.setPass(new GolfPass());
 
 		user = golfService.addUser(user);
 
@@ -122,6 +127,51 @@ public class PassbookServiceBean implements PassbookService{
 		}
 		
 		return fileInputStream;
+	}
+
+	@Override
+	public void addPassbook(String serialNumber, String deviceId, String passTypeId, String pushToken) {
+		
+		// Get the Pass Registration with serial number 
+		
+		PassRegistrations passRegi;
+		GolfPass golfPass;
+		
+		passRegi = golfService.getPassRegisteredBySerialNumberAndPassTypeId(serialNumber, passTypeId);
+
+		int userPassId = passRegi.getPass().getPassId();
+		
+		// Update pass table with devid and push token
+		
+		golfPass = golfService.findGolfPassById(userPassId);
+		
+		System.out.println("---->"+golfPass);
+		
+		golfPass.setDeviceId(deviceId);
+		golfPass.setToken(pushToken);
+		golfPass.setPassAdded(true);
+		
+		golfPass = golfService.updateGolfPass(golfPass);
+
+		
+	}
+
+	@Override
+	public String updateGolfScore(String hole, String score, String gameId) {
+		
+		GolfScore golfScore;
+		golfScore = new GolfScore();
+		golfScore.setHoleNumber(Integer.parseInt(hole));
+		golfScore.setGolf(new Golf(Integer.parseInt(gameId)));
+		golfScore.setScore(Integer.parseInt(score));
+
+		GolfScoreDao scoreUpdated = golfService.updateScore(golfScore);
+		
+		Golf golf = golfService.getGolfById(scoreUpdated.getGolf().getId());
+		
+		GolfPass pass = golf.getUsersId().getPass();
+		
+		return pass.getToken();
 	}
 	
 	

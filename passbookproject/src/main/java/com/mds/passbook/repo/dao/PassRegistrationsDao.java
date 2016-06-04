@@ -70,4 +70,12 @@ public class PassRegistrationsDao extends AbstractDateStampEntity {
 		this.serialNumber = serialNumber;
 	}
 
+	@Override
+	public String toString() {
+		return "PassRegistrationsDao [registerPassId=" + registerPassId + ", passTypeId=" + passTypeId
+				+ ", serialNumber=" + serialNumber + ", pass=" + pass + "]";
+	}
+	
+	
+
 }

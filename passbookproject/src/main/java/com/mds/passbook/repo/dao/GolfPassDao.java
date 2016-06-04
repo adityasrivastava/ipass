@@ -23,7 +23,7 @@ public class GolfPassDao extends AbstractDateStampEntity implements Serializable
 	private String token;
 
 	@Column(name = "DEVICE_ID")
-	private int deviceId;
+	private String deviceId;
 
 	@Column(name = "PASS_ADDED")
 	private boolean passAdded;
@@ -31,7 +31,7 @@ public class GolfPassDao extends AbstractDateStampEntity implements Serializable
 	@OneToMany(mappedBy="pass", cascade=CascadeType.ALL)
 	private List<PassRegistrationsDao> registeredPass;
 
-	public GolfPassDao(String token, int deviceId, boolean passAdded) {
+	public GolfPassDao(String token, String deviceId, boolean passAdded) {
 		this.token = token;
 		this.deviceId = deviceId;
 		this.passAdded = passAdded;
@@ -61,11 +61,11 @@ public class GolfPassDao extends AbstractDateStampEntity implements Serializable
 		this.passId = passId;
 	}
 
-	public int getDeviceId() {
+	public String getDeviceId() {
 		return deviceId;
 	}
 
-	public void setDeviceId(int deviceId) {
+	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
 	}
 

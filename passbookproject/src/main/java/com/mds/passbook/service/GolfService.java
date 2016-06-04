@@ -34,7 +34,8 @@ public interface GolfService {
 	
 	void addGolfPass(GolfPass pass);
 	void deleteGolfPass(GolfPass pass);
-	void updateGolfPass(GolfPass pass);
+	GolfPass updateGolfPass(GolfPass pass);
+	GolfPass findGolfPassById(int id);
 	
 	void addGolfTee(GolfTee tee);
 	void deleteGolfTee(GolfTee tee);
@@ -55,12 +56,12 @@ public interface GolfService {
 	void updateUser(GolfUser user);
 	
 	Iterable<GolfDao> getAllGolf();
-	GolfDao getGolfById(int id);
+	Golf getGolfById(int id);
 	void addGame(GolfDao golf);
 	void deleteGame(GolfDao golf);
 	void updateGame(GolfDao golf);
 	
-	GolfScore updateScore(GolfScore score);
+	GolfScoreDao updateScore(GolfScore score);
 	
 	Iterable<GolfTeeDao> getAllTee();
 	void addTee(GolfTeeDao tee);
@@ -68,13 +69,15 @@ public interface GolfService {
 	void updateTee(GolfTeeDao tee);
 	GolfScoreDao getScoreById(int id);
 	
+	PassRegistrations getPassRegisteredBySerialNumberAndPassTypeId(String serialNumber, String passTypeId);
+	
 	List<GolfScoreDao> getScoresById(int id);
 	
 	void deletePassRegistrations(PassRegistrations passRegister);
 	
 	void updatePassRegistrations(PassRegistrations passRegister);
 	
-	List<PassRegistrationsDao> findUpdatedPass(String passTypeId, String deviceId);
+	List<PassRegistrations> findUpdatedPass(String passTypeId, String deviceId);
 	
 	List<GolfCourse> findAllGolfCourses();
 	
@@ -85,4 +88,5 @@ public interface GolfService {
 	List<Golf> findAllGolf();
 	
 	GolfTeeDao getTeeById(int id);
+
 }

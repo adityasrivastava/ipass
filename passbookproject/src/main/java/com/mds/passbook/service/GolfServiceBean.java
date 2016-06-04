@@ -70,20 +70,10 @@ public class GolfServiceBean implements GolfService {
 	public GolfUser addUser(GolfUser user) {
 
 		GolfUserDao userDao;
-		GolfPassDao passDao;
 
 		userDao = new GolfUserDao();
 
-		userDao.setName(user.getName());
-		userDao.setAge(user.getAge());
-		userDao.setGender(user.getGender());
-		userDao.setHandicap(user.getHandicap());
-
-		passDao = new GolfPassDao();
-		if (user.getPass() != null) {
-			passDao.setPassAdded(user.getPass().isPassAdded());
-			userDao.setPass(passDao);
-		}
+		userDao = GolfMapper.INSTANCE.GolfUserDTOtoGolfUserDAO(user);
 
 		userDao = golfUserRepo.save(userDao);
 		user.setUserId(userDao.getUserId());
@@ -123,8 +113,16 @@ public class GolfServiceBean implements GolfService {
 	}
 
 	@Override
-	public GolfDao getGolfById(int id) {
-		return golfRepo.findOne(id);
+	public Golf getGolfById(int id) {
+		
+		GolfDao golfDao;
+		Golf golf;
+		
+		golfDao = golfRepo.findOne(id);
+		
+		golf = GolfMapper.INSTANCE.golfDAOtoGolfDTO(golfDao);
+		
+		return golf;
 	}
 
 	@Override
@@ -148,7 +146,7 @@ public class GolfServiceBean implements GolfService {
 	}
 
 	@Override
-	public GolfScore updateScore(GolfScore score) {
+	public GolfScoreDao updateScore(GolfScore score) {
 
 		GolfScoreDao scoreDao;
 		GolfDao golfDao;
@@ -158,12 +156,12 @@ public class GolfServiceBean implements GolfService {
 		scoreDao = golfScoreRepo.findByGolfAndHoleNumber(golfDao, score.getHoleNumber());
 
 		scoreDao.setScore(score.getScore());
-		
+
 		scoreDao = golfScoreRepo.save(scoreDao);
-		
+
 		score = GolfMapper.INSTANCE.GolfScoreDAOtoGolfScoreDTO(scoreDao);
 
-		return score;
+		return scoreDao;
 	}
 
 	@Override
@@ -339,17 +337,15 @@ public class GolfServiceBean implements GolfService {
 	}
 
 	@Override
-	public void updateGolfPass(GolfPass pass) {
+	public GolfPass updateGolfPass(GolfPass pass) {
 		GolfPassDao passDao;
+		passDao = GolfMapper.INSTANCE.GolfPassDTOtoGolfPassDAO(pass);
 
-		passDao = new GolfPassDao();
+		passDao = golfPassRepo.save(passDao);
 
-		passDao.setPassId(pass.getPassId());
-		passDao.setPassAdded(pass.isPassAdded());
-		passDao.setToken(pass.getToken());
-		passDao.setDeviceId(pass.getDeviceId());
+		pass = GolfMapper.INSTANCE.GolfPassDAOtoGolfPassDTO(passDao);
 
-		golfPassRepo.save(passDao);
+		return pass;
 	}
 
 	@Override
@@ -453,23 +449,22 @@ public class GolfServiceBean implements GolfService {
 	public void deletePassRegistrations(PassRegistrations passRegister) {
 		PassRegistrationsDao registrationsDao;
 
-		registrationsDao = new PassRegistrationsDao();
-		registrationsDao.setPassTypeId(passRegister.getPassTypeId());
-		registrationsDao.setSerialNumber(passRegister.getSerialNumber());
+		registrationsDao = golfPassRegisterRepo.findBySerialNumberAndPassTypeId(passRegister.getSerialNumber(), passRegister.getPassTypeId());
 
 		golfPassRegisterRepo.delete(registrationsDao);
 	}
 
 	@Override
-	public List<PassRegistrationsDao> findUpdatedPass(String passTypeId, String deviceId) {
+	public List<PassRegistrations> findUpdatedPass(String passTypeId, String deviceId) {
 
 		GolfPassDao passDao;
 		List<PassRegistrationsDao> registrationsDao;
+		List<PassRegistrations> registrations;
 
 		passDao = golfPassRepo.findByDeviceId(deviceId);
 		registrationsDao = golfPassRegisterRepo.findByPassTypeId(passTypeId);
-
-		return registrationsDao;
+		registrations = GolfMapper.INSTANCE.PassRegistrationsDAOListToPassRegistrationsDTOList(registrationsDao);
+		return registrations;
 
 	}
 
@@ -479,15 +474,16 @@ public class GolfServiceBean implements GolfService {
 		Iterable<GolfCourseDao> courseDaoItr = golfCourseRepo.findAll();
 		List<GolfCourseDao> courseDaoList = new ArrayList<GolfCourseDao>();
 		List<GolfCourse> courseList = new ArrayList<GolfCourse>();
-		
+
 		courseDaoItr.forEach(courseDaoList::add);
-		
+
 		courseList = GolfMapper.INSTANCE.golfCourseDAOListToGolfCourseDTOList(courseDaoList);
 
-//		for (GolfCourseDao course : courseDaoItr) {
-//			GolfCourse mappedCourse = GolfMapper.INSTANCE.golfCourseDAOtoGolfCourseDTO(course);
-//			courseList.add(mappedCourse);
-//		}
+		// for (GolfCourseDao course : courseDaoItr) {
+		// GolfCourse mappedCourse =
+		// GolfMapper.INSTANCE.golfCourseDAOtoGolfCourseDTO(course);
+		// courseList.add(mappedCourse);
+		// }
 
 		return courseList;
 	}
@@ -497,15 +493,16 @@ public class GolfServiceBean implements GolfService {
 		Iterable<GolfHolesDao> holesDaoItr = golfHolesRepo.findAll();
 		List<GolfHolesDao> holesDaoList = new ArrayList<GolfHolesDao>();
 		List<GolfHoles> holesList = new ArrayList<GolfHoles>();
-		
+
 		holesDaoItr.forEach(holesDaoList::add);
-		
+
 		holesList = GolfMapper.INSTANCE.golfHolesDAOListToGolfHolesDTOList(holesDaoList);
-//
-//		for (GolfHolesDao hole : holesDaoItr) {
-//			GolfHoles holeMapper = GolfMapper.INSTANCE.golfHolesDAOtoGolfHolesDTO(hole);
-//			holesList.add(holeMapper);
-//		}
+		//
+		// for (GolfHolesDao hole : holesDaoItr) {
+		// GolfHoles holeMapper =
+		// GolfMapper.INSTANCE.golfHolesDAOtoGolfHolesDTO(hole);
+		// holesList.add(holeMapper);
+		// }
 
 		return holesList;
 	}
@@ -514,18 +511,18 @@ public class GolfServiceBean implements GolfService {
 	public List<GolfTee> findAllGolfTee() {
 		Iterable<GolfTeeDao> teeDaoItr = golfTeeRepo.findAll();
 		List<GolfTeeDao> teeDaoList = new ArrayList<GolfTeeDao>();
-		
+
 		List<GolfTee> teeList = new ArrayList<GolfTee>();
-		
+
 		teeDaoItr.forEach(teeDaoList::add);
-		
-		teeList =  GolfMapper.INSTANCE.GolfTeeDAOListToGolfTeeDTOList(teeDaoList);
-//		
-//		for (GolfTeeDao tee : teeDaoItr) {
-//			GolfTee teeMapper = GolfMapper.INSTANCE.GolfTeeDAOtoGolfTeeDTO(tee);
-//			System.out.println(tee);
-//			teeList.add(teeMapper);
-//		}
+
+		teeList = GolfMapper.INSTANCE.GolfTeeDAOListToGolfTeeDTOList(teeDaoList);
+		//
+		// for (GolfTeeDao tee : teeDaoItr) {
+		// GolfTee teeMapper = GolfMapper.INSTANCE.GolfTeeDAOtoGolfTeeDTO(tee);
+		// System.out.println(tee);
+		// teeList.add(teeMapper);
+		// }
 
 		return teeList;
 	}
@@ -535,19 +532,41 @@ public class GolfServiceBean implements GolfService {
 		Iterable<GolfDao> golfDaoItr = golfRepo.findAll();
 		List<GolfDao> golfDaoList = new ArrayList<GolfDao>();
 
-
 		List<Golf> golfList = new ArrayList<Golf>();
-		
+
 		golfDaoItr.forEach(golfDaoList::add);
-		
+
 		golfList = GolfMapper.INSTANCE.golfDAOListToGolfDTOList(golfDaoList);
 
-//		for (GolfDao golf : golfDaoItr) {
-//			Golf golfMapper =  GolfMapper.INSTANCE.golfDAOtoGolfDTO(golf);
-//			golfList.add(new Golf());
-//		}
+		// for (GolfDao golf : golfDaoItr) {
+		// Golf golfMapper = GolfMapper.INSTANCE.golfDAOtoGolfDTO(golf);
+		// golfList.add(new Golf());
+		// }
 
 		return golfList;
+	}
+
+	@Override
+	public PassRegistrations getPassRegisteredBySerialNumberAndPassTypeId(String serialNumber, String passTypeId) {
+
+		PassRegistrationsDao passRegiDao;
+		PassRegistrations passRegi;
+		passRegiDao = golfPassRegisterRepo.findBySerialNumberAndPassTypeId(serialNumber, passTypeId);
+		passRegi = GolfMapper.INSTANCE.PassRegistrationsDAOtoPassRegistrationsDTO(passRegiDao);
+
+		return passRegi;
+	}
+
+	@Override
+	public GolfPass findGolfPassById(int id) {
+		GolfPass golfPass;
+		GolfPassDao golfPassDao;
+
+		golfPassDao = golfPassRepo.findOne(new Integer(id));
+
+		golfPass = GolfMapper.INSTANCE.GolfPassDAOtoGolfPassDTO(golfPassDao);
+
+		return golfPass;
 	}
 
 }

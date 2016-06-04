@@ -6,7 +6,7 @@ public class GolfPass {
 
 	private int passId;
 	private String token;
-	private int deviceId;
+	private String deviceId;
 	private boolean passAdded;
 	private List<PassRegistrations> registeredPass;
 
@@ -27,11 +27,11 @@ public class GolfPass {
 		this.passId = passId;
 	}
 
-	public int getDeviceId() {
+	public String getDeviceId() {
 		return deviceId;
 	}
 
-	public void setDeviceId(int deviceId) {
+	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
 	}
 

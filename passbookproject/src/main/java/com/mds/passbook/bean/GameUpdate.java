@@ -5,12 +5,13 @@ import java.util.List;
 
 public class GameUpdate {
 	
-	private List<String> serialNumbers;
+	private String[] serialNumbers;
 	private String lastUpdated;
-	public List<String> getSerialNumbers() {
+	
+	public String[] getSerialNumbers() {
 		return serialNumbers;
 	}
-	public void setSerialNumbers(List<String> serialNumbers) {
+	public void setSerialNumbers(String[] serialNumbers) {
 		this.serialNumbers = serialNumbers;
 	}
 	public String getLastUpdated() {
