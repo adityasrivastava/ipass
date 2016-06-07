@@ -8,6 +8,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+
+import com.mds.passbook.bean.Golf;
 
 @Entity(name="PASS_REGISTRATION")
 public class PassRegistrationsDao extends AbstractDateStampEntity {
@@ -23,9 +26,14 @@ public class PassRegistrationsDao extends AbstractDateStampEntity {
 	@Column(name = "SERIAL_NUMBER")
 	private String serialNumber;
 
+	@OneToOne
+	@JoinColumn(name="GOLF_ID",
+				foreignKey=@ForeignKey(name="GOLF_ID_FK"))
+	private GolfDao golf;
+	
 	@ManyToOne
-	@JoinColumn(name="REGISTERED_PASS_ID",
-	foreignKey=@ForeignKey(name="REGISTERED_PASS_ID_FK"))
+	@JoinColumn(name="GOLF_PASS_ID",
+	foreignKey=@ForeignKey(name="GOLF_PASS_ID_FK"))
 	private GolfPassDao pass;
 
 	public PassRegistrationsDao(String passTypeId, String serialNumber, GolfPassDao pass) {

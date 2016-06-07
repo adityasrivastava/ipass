@@ -1,6 +1,7 @@
 package com.mds.passkit;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,13 +29,19 @@ public class GeneratePass {
 		
 		List<Field<?>> scoreFields = new ArrayList<>();
 		int totalScore = 0;
+		int totalPar = 0;
 		int count = 0;
-		scoreFields.add(new DateField("datetime", "Date & Time", new Date()));
+		
+		SimpleDateFormat format = new SimpleDateFormat("E dd.mm.yyyy 'at' hh:mm a");
+		
+		
+		scoreFields.add(new TextField("datetime", "Date & Time", format.format(new Date())));
 		
 		for(GolfScore score: wallet){
 			totalScore += score.getScore();
-			String fieldText = score.getHoleNumber()+" - "+ score.getScore() +" , "+ score.getPar()+" Par, "+score.getStroke()+" 7 Stroke, "+score.getTeeType()+" White Tee, "+score.getYards()+" Yards";
-			scoreFields.add(new TextField("hole_"+count++,"hole_"+count, fieldText));
+			totalPar += score.getPar();
+			String fieldText = "Score "+ score.getScore() +" , "+ score.getPar()+" Par, "+score.getStroke()+" Stroke, "+score.getTeeType()+" Tee, "+score.getYards()+" Yards";
+			scoreFields.add(new TextField("hole_"+count++,"Hole "+count, fieldText));
 		}
 		
 		properites = PassKitUtils.getProperties();
@@ -42,16 +49,16 @@ public class GeneratePass {
 		long unixTime = System.currentTimeMillis() / 1000L;
 		Aviva aviva = new Aviva();
 		
-		TextField changeField = new TextField("heading", "Gulf Course", ""+unixTime);
+		TextField changeField = new TextField("heading", "Score", ""+totalScore);
 		changeField.changeMessage("Update with new Pass");
 
 	      try {
 	        aviva.generateStorePass(passLocation, "12345678912345678", wallet.get(0).getUser().getSerialNumber(),  new Generic()
 	        	      .headerFields(changeField)
-	        	      .primaryFields(new TextField("course_name","Course","Hamani Golf"))
+	        	      .primaryFields(new TextField("course_name","Course",wallet.get(0).getUser().getGolfCourseName()))
 	        	      .auxiliaryFields(
-	        	    		  new TextField("game","Game", wallet.get(0).getUser().getGolfHoleType()).textAlignment(TextAlignment.LEFT),
-	        	              new TextField("par", "Par", ""+totalScore).textAlignment(TextAlignment.RIGHT)
+	        	    		  new TextField("game","Game", wallet.get(0).getUser().getGolfHoleType()+" Hole").textAlignment(TextAlignment.LEFT),
+	        	              new TextField("par", "Par", ""+totalPar).textAlignment(TextAlignment.RIGHT)
 	        	      )
 	        	      .secondaryFields(
 	        	    		  new TextField("age","Age", wallet.get(0).getUser().getUserGender().charAt(0)+wallet.get(0).getUser().getUserAge()).textAlignment(TextAlignment.LEFT),

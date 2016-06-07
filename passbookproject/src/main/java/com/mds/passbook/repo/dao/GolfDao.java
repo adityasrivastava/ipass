@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.mds.passbook.bean.PassRegistrations;
+
 @Entity(name="GOLF")
 public class GolfDao extends AbstractDateStampEntity implements Serializable{
 	
@@ -42,6 +44,10 @@ public class GolfDao extends AbstractDateStampEntity implements Serializable{
 	@JoinColumn(name="GOLF_TEE")
 	private GolfTeeDao teeTypesId;
 	
+	@OneToOne(mappedBy="golf")
+	@JoinColumn(name="GOLF_PASS_REGISTERED")
+	private PassRegistrationsDao passRegistrationsId;
+	
 	
 	@OneToMany(mappedBy="golf", cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<GolfScoreDao> scoresId = new ArrayList<GolfScoreDao>();
@@ -65,6 +71,14 @@ public class GolfDao extends AbstractDateStampEntity implements Serializable{
 	}
 
 
+
+	public PassRegistrationsDao getPassRegistrationsId() {
+		return passRegistrationsId;
+	}
+
+	public void setPassRegistrationsId(PassRegistrationsDao passRegistrationsId) {
+		this.passRegistrationsId = passRegistrationsId;
+	}
 
 	public List<GolfScoreDao> getScoresId() {
 		return scoresId;

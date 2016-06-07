@@ -64,8 +64,8 @@ public class Aviva {
                             new PassResource(resourcePath + "/icon@2x.png"),
                             new PassResource(resourcePath + "/logo.png"),
                             new PassResource(resourcePath + "/logo@2x.png"),
-                            new PassResource(resourcePath + "/strip.png"),
-                            new PassResource(resourcePath + "/strip@2x.png")
+                            new PassResource(resourcePath + "/thumbnail.png")
+//                            new PassResource(resourcePath + "/thumbnail@2x.png")
                     )
                     .passInformation(passInfo);
 

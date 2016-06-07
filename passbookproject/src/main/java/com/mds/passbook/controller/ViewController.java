@@ -13,4 +13,11 @@ public class ViewController {
 		PassbookStatus.setUpdateStatus(false);
 		return "update";
 	}
+	
+	@RequestMapping(value="/login", method = RequestMethod.GET)
+	public String login(){
+		PassbookStatus.getInstance();
+		PassbookStatus.setUpdateStatus(false);
+		return "login";
+	}
 }

@@ -134,29 +134,31 @@ public class GolfController {
 	}
 	
 	@RequestMapping(value="/tee", method=RequestMethod.POST)
-	public String golf(@RequestBody(required=true) GolfTee tee, @RequestParam(name="target") String target){
+	public String golf(@RequestBody(required=true) List<GolfTee> teeList, @RequestParam(name="target") String target){
 		
-		String response;
+		String response = "";
 		
+		for(GolfTee tee: teeList){
 
-		switch(target.toLowerCase()){
-			case "add":
-				service.addGolfTee(tee);
-				response = "ADD";
-				break;
-			case "remove":
-				service.deleteGolfTee(tee);
-				response = "DELETE";
-				break;
-			case "update":
-				service.updateGolfTee(tee);
-				response = "UPDATE";
-				break;
-			default:
-				response = "-1";
-				break;
+			switch(target.toLowerCase()){
+				case "add":
+					service.addGolfTee(tee);
+					response = "ADD";
+					break;
+				case "remove":
+					service.deleteGolfTee(tee);
+					response = "DELETE";
+					break;
+				case "update":
+					service.updateGolfTee(tee);
+					response = "UPDATE";
+					break;
+				default:
+					response = "-1";
+					break;
+			}
+			
 		}
-		
 		return response;
 		
 	}

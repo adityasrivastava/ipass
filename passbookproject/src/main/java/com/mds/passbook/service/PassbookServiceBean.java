@@ -67,11 +67,12 @@ public class PassbookServiceBean implements PassbookService{
 		dao = golfService.addGolf(golf);
 		
 		golfDao = dao.get(0).getGolf();
-
+		System.out.println("------->"+golfDao.getId());
 		wallet.setSerialNumber(""+golfDao.getId());
 		wallet.setUserName(golfDao.getUsersId().getName());
 		wallet.setUserGender(golfDao.getUsersId().getGender());
 		wallet.setUserAge(""+golfDao.getUsersId().getAge());
+		wallet.setGolfCourseName(golfDao.getGolfCoursesId().getCourseName());
 		wallet.setGolfHoleType(""+golfDao.getHoleTypesId().getHoles());
 
 		
@@ -138,7 +139,7 @@ public class PassbookServiceBean implements PassbookService{
 		GolfPass golfPass;
 		
 		passRegi = golfService.getPassRegisteredBySerialNumberAndPassTypeId(serialNumber, passTypeId);
-
+	
 		int userPassId = passRegi.getPass().getPassId();
 		
 		// Update pass table with devid and push token

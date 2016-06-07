@@ -54,7 +54,7 @@
 				</div>
 
 				<div class="hole-input-box col-sm-2">
-					<select class="form-control" name="hole" ng-model="user.hole" ng-options="hole.holes as hole.holes for hole in data_properties.hole_type_list"></select>
+					<select class="form-control" name="hole" ng-model="user.hole" ng-options="hole as hole for hole in data_properties.hole_numbers_array track by hole"></select>
 				</div>	
 			</div>
 

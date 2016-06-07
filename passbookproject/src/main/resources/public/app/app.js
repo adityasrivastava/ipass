@@ -17,70 +17,7 @@ app.controller("passbookCtrl",function($scope, $http, $location, $document, $win
 		score: ""
 	};
 
-	$scope.data_properties = {
-		genders : [
-			{
-				id: 0,
-			 	value: "Male"
-			},
-			{
-				id: 1,
-				value: "Female"
-			}
-		],
-		golf_course_list: [
-			{
-				id: 0,
-				value: "Golf Course 1"
-			},
-			{
-				id: 1,
-				value: "Golf Course 2"
-			},
-			{
-				id: 3,
-				value: "Golf Course 3"
-			}
-		],
-		hole_type_list: [
-			{
-				id: 0,
-				value: "Hole 9"
-			},
-			{
-				id: 1,
-				value: "Hole 18"
-			}
-		],
-		tee_type_list: [
-			{
-				id: 0,
-				value: "Red"
-			},
-			{
-				id: 1,
-				value: "Green"
-			},
-			{
-				id: 2,
-				value: "Blue"
-			},
-			{
-				id: 3,
-				value: "White"
-			}
-		],
-
-		hole_list : function(){
-			var returnValue = new Array();
-			var count = 0;
-			while(count < 18){
-				returnValue[count] = count++;
-			}
-
-			return returnValue;
-		}
-	}
+	$scope.data_properties = {};
 
 
 	function init(){
@@ -89,8 +26,23 @@ app.controller("passbookCtrl",function($scope, $http, $location, $document, $win
 		// })
 		$http.get("/golfDetails").then(function(response){
 			$scope.data_properties = response.data;
+
+			$scope.data_properties.hole_numbers_array = [];
+			$scope.data_properties.hole_numbers_array = createHoleNumberList(parseInt($scope.data_properties.hole_type_list[0].holes));
+
+
 			console.log(response.data);
 		});
+	}
+
+	function createHoleNumberList(totalHoleNumber){
+		var numbers_array = [];
+		console.log(totalHoleNumber);
+		for(var count = 1; count<=totalHoleNumber; count++){
+			numbers_array.push(count);
+		}
+
+		return numbers_array;
 	}
 
 	$scope.updatePassbook =function(){

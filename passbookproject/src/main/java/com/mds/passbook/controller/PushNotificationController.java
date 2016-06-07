@@ -52,13 +52,6 @@ public class PushNotificationController {
 	public static final Logger logger = LoggerFactory.getLogger(PushNotificationController.class);
 	public static String token = "15c19c99888bed405f91785e4140b9f267c3f8fc191556ae562fb96ab31f83f4";
 
-	private static String username;
-	private static String userAge;
-	private static String userGender;
-	private static String holeType;
-	private static String hole;
-	private static String score;
-
 	@Autowired
 	GolfService golfService;
 	
@@ -154,9 +147,6 @@ public class PushNotificationController {
 	@RequestMapping(value = "/pushNotifications")
 	public void pushToken(@RequestParam(name = "hole", required = true) String hole,
 			@RequestParam(name = "score", required = true) String score, @RequestParam(name = "gameId") String gameId) {
-
-		PushNotificationController.hole = hole;
-		PushNotificationController.score = score;
 
 		String token = passbookService.updateGolfScore(hole, score, gameId);
 		System.out.println("Token --> "+token);
@@ -255,6 +245,7 @@ public class PushNotificationController {
 		wallet.setUserGender(golfDao.getUsersId().getGender());
 		wallet.setUserAge("" + golfDao.getUsersId().getAge());
 		wallet.setGolfHoleType("" + golfDao.getHoleTypesId().getHoles());
+		wallet.setGolfCourseName(golfDao.getGolfCoursesId().getCourseName());
 
 		List<com.mds.passkit.GolfScore> scores = new ArrayList<com.mds.passkit.GolfScore>();
 

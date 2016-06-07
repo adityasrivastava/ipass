@@ -9,20 +9,37 @@ public class GolfWallet {
 	private String userAge;
 	private String userGender;
 	private String golfHoleType;
+	private String golfCourseName;
 	private List<GolfScore> golfScore;
 
+	
+
 	public GolfWallet(String serialNumber, String userName, String userAge, String userGender, String golfHoleType,
-			List<GolfScore> golfScore) {
+			String golfCourseName, List<GolfScore> golfScore) {
+		super();
 		this.serialNumber = serialNumber;
 		this.userName = userName;
 		this.userAge = userAge;
 		this.userGender = userGender;
 		this.golfHoleType = golfHoleType;
+		this.golfCourseName = golfCourseName;
 		this.golfScore = golfScore;
 	}
 
+
+
 	public GolfWallet() {
 
+	}
+	
+	
+
+	public String getGolfCourseName() {
+		return golfCourseName;
+	}
+
+	public void setGolfCourseName(String golfCourseName) {
+		this.golfCourseName = golfCourseName;
 	}
 
 	public String getSerialNumber() {

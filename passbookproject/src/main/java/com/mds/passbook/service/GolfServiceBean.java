@@ -451,7 +451,10 @@ public class GolfServiceBean implements GolfService {
 
 		registrationsDao = golfPassRegisterRepo.findBySerialNumberAndPassTypeId(passRegister.getSerialNumber(), passRegister.getPassTypeId());
 
-		golfPassRegisterRepo.delete(registrationsDao);
+		if(registrationsDao != null){
+			golfPassRegisterRepo.delete(registrationsDao);
+		}
+		
 	}
 
 	@Override
@@ -479,12 +482,6 @@ public class GolfServiceBean implements GolfService {
 
 		courseList = GolfMapper.INSTANCE.golfCourseDAOListToGolfCourseDTOList(courseDaoList);
 
-		// for (GolfCourseDao course : courseDaoItr) {
-		// GolfCourse mappedCourse =
-		// GolfMapper.INSTANCE.golfCourseDAOtoGolfCourseDTO(course);
-		// courseList.add(mappedCourse);
-		// }
-
 		return courseList;
 	}
 
@@ -497,13 +494,7 @@ public class GolfServiceBean implements GolfService {
 		holesDaoItr.forEach(holesDaoList::add);
 
 		holesList = GolfMapper.INSTANCE.golfHolesDAOListToGolfHolesDTOList(holesDaoList);
-		//
-		// for (GolfHolesDao hole : holesDaoItr) {
-		// GolfHoles holeMapper =
-		// GolfMapper.INSTANCE.golfHolesDAOtoGolfHolesDTO(hole);
-		// holesList.add(holeMapper);
-		// }
-
+	
 		return holesList;
 	}
 
@@ -517,12 +508,6 @@ public class GolfServiceBean implements GolfService {
 		teeDaoItr.forEach(teeDaoList::add);
 
 		teeList = GolfMapper.INSTANCE.GolfTeeDAOListToGolfTeeDTOList(teeDaoList);
-		//
-		// for (GolfTeeDao tee : teeDaoItr) {
-		// GolfTee teeMapper = GolfMapper.INSTANCE.GolfTeeDAOtoGolfTeeDTO(tee);
-		// System.out.println(tee);
-		// teeList.add(teeMapper);
-		// }
 
 		return teeList;
 	}
@@ -537,11 +522,6 @@ public class GolfServiceBean implements GolfService {
 		golfDaoItr.forEach(golfDaoList::add);
 
 		golfList = GolfMapper.INSTANCE.golfDAOListToGolfDTOList(golfDaoList);
-
-		// for (GolfDao golf : golfDaoItr) {
-		// Golf golfMapper = GolfMapper.INSTANCE.golfDAOtoGolfDTO(golf);
-		// golfList.add(new Golf());
-		// }
 
 		return golfList;
 	}

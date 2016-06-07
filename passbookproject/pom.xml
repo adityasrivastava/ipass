@@ -19,7 +19,7 @@
 		<jetty.version>9.3.8.v20160314</jetty.version>
 		<!-- https://www.eclipse.org/jetty/documentation/current/alpn-chapter.html#alpn-versions -->
 		<alpn-version>8.1.7.v20160121</alpn-version>
-		 <org.mapstruct.version>1.0.0.Final</org.mapstruct.version>
+		<org.mapstruct.version>1.0.0.Final</org.mapstruct.version>
 	</properties>
 
 	<dependencies>
@@ -54,12 +54,12 @@
 			<version>6.0.2</version>
 		</dependency>
 		<!-- http://mvnrepository.com/artifact/com.googlecode.jmapper-framework/jmapper-core -->
-		
+
 		<dependency>
-        <groupId>org.mapstruct</groupId>
-        <artifactId>mapstruct-jdk8</artifactId>
-        <version>${org.mapstruct.version}</version>
-    </dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-jdk8</artifactId>
+			<version>${org.mapstruct.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -68,6 +68,16 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>4.1.0.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>4.1.0.RELEASE</version>
 		</dependency>
 		<!-- <dependency> <groupId>com.h2database</groupId> <artifactId>h2</artifactId> 
 			</dependency> -->
@@ -124,44 +134,38 @@
 	</dependencies>
 
 	<build>
-<!-- 	<resources>
-		<resource>
-			<directory>public/</directory>
-		</resource>
-		<resource>
-			<directory>src/main/resources</directory>
-		</resource>
-	</resources> -->
+		<!-- <resources> <resource> <directory>public/</directory> </resource> 
+			<resource> <directory>src/main/resources</directory> </resource> </resources> -->
 		<plugins>
-		 <plugin>
-  <groupId>org.bsc.maven</groupId>
-  <artifactId>maven-processor-plugin</artifactId>
-  <version>2.2.4</version>
-            <configuration>
-                <defaultOutputDirectory>
-                    ${project.build.directory}/generated-sources
-                </defaultOutputDirectory>
-                <processors>
-                    <processor>org.mapstruct.ap.MappingProcessor</processor>
-                </processors>
-            </configuration>
-            <executions>
-                <execution>
-                    <id>process</id>
-                    <phase>generate-sources</phase>
-                    <goals>
-                        <goal>process</goal>
-                    </goals>
-                </execution>
-            </executions>
-            <dependencies>
-                <dependency>
-                    <groupId>org.mapstruct</groupId>
-                    <artifactId>mapstruct-processor</artifactId>
-                    <version>${org.mapstruct.version}</version>
-                </dependency>
-            </dependencies>
-        </plugin>
+			<plugin>
+				<groupId>org.bsc.maven</groupId>
+				<artifactId>maven-processor-plugin</artifactId>
+				<version>2.2.4</version>
+				<configuration>
+					<defaultOutputDirectory>
+						${project.build.directory}/generated-sources
+					</defaultOutputDirectory>
+					<processors>
+						<processor>org.mapstruct.ap.MappingProcessor</processor>
+					</processors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>process</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>process</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.mapstruct</groupId>
+						<artifactId>mapstruct-processor</artifactId>
+						<version>${org.mapstruct.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
