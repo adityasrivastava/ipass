@@ -13,17 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 @Configuration
 @EnableWebSecurity
-@ComponentScan("com.mds.passbook")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	
-	@Autowired
-	@Qualifier("springAuthProvider")
-	UserDetailsService userDetailService;
-	
-	@Autowired
-	public void configureGlobalAuth(final AuthenticationManagerBuilder auth) throws Exception{
-		auth.userDetailsService(userDetailService);
-	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -31,8 +21,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.authorizeRequests()
 		.anyRequest()
 		.authenticated()
-		.and()
-		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
 		.formLogin()
 		.loginPage("/login")
@@ -43,9 +31,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 	
 	
-//
-//	@Autowired
-//	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//		auth.inMemoryAuthentication().withUser("user").password("password").roles("USER");
-//	}
+
+	@Autowired
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+		auth.inMemoryAuthentication().withUser("user").password("password").roles("USER");
+	}
 }
