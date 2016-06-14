@@ -20,6 +20,8 @@
 		<!-- https://www.eclipse.org/jetty/documentation/current/alpn-chapter.html#alpn-versions -->
 		<alpn-version>8.1.7.v20160121</alpn-version>
 		<org.mapstruct.version>1.0.0.Final</org.mapstruct.version>
+		<spring.social.version>1.1.4.RELEASE</spring.social.version>
+		<spring.social.facebook.version>2.0.3.RELEASE</spring.social.facebook.version>
 	</properties>
 
 	<dependencies>
@@ -29,6 +31,70 @@
 			<artifactId>passkit</artifactId>
 			<version>1.0-SNAPSHOT</version>
 			<scope>compile</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.1</version>
+		</dependency>
+
+		<!-- Joda -->
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jadira.usertype</groupId>
+			<artifactId>usertype.spi</artifactId>
+			<version>3.0.0.GA</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jadira.usertype</groupId>
+			<artifactId>usertype.core</artifactId>
+			<version>3.0.0.GA</version>
+		</dependency>
+		
+		
+		<!-- Spring Social -->
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-config</artifactId>
+			<version>${spring.social.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-core</artifactId>
+			<version>${spring.social.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-security</artifactId>
+			<version>${spring.social.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-web</artifactId>
+			<version>${spring.social.version}</version>
+		</dependency>
+		<!-- Spring Social Facebook -->
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-facebook</artifactId>
+			<version>${spring.social.facebook.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-social-core</artifactId>
+					<groupId>org.springframework.social</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>spring-social-config</artifactId>
+					<groupId>org.springframework.social</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>

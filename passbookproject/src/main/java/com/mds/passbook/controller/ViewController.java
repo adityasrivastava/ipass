@@ -14,10 +14,13 @@ public class ViewController {
 		return "update";
 	}
 	
-	@RequestMapping(value="/login", method = RequestMethod.GET)
-	public String login(){
-		PassbookStatus.getInstance();
-		PassbookStatus.setUpdateStatus(false);
+	@RequestMapping("/login")
+	public String loginPage(){
 		return "login";
+	}
+	
+	@RequestMapping("/signup")
+	public String signUpPage(){
+		return "home";
 	}
 }
