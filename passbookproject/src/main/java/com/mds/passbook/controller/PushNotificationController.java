@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.Principal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,9 +32,11 @@ import com.mds.passbook.bean.GolfPass;
 import com.mds.passbook.bean.GolfScore;
 import com.mds.passbook.bean.PassRegistrations;
 import com.mds.passbook.notification.PassbookNotification;
+import com.mds.passbook.repo.UserProfileRepository;
 import com.mds.passbook.repo.dao.GolfDao;
 import com.mds.passbook.repo.dao.GolfScoreDao;
 import com.mds.passbook.repo.dao.PassRegistrationsDao;
+import com.mds.passbook.repo.dao.UserProfile;
 import com.mds.passbook.service.GolfService;
 import com.mds.passbook.service.PassbookService;
 import com.mds.passkit.GeneratePass;
@@ -54,6 +57,9 @@ public class PushNotificationController {
 
 	@Autowired
 	GolfService golfService;
+	
+	@Autowired
+	UserProfileRepository userProfileRepo;
 	
 	@Autowired
 	PassbookService passbookService;
@@ -85,13 +91,18 @@ public class PushNotificationController {
 			@RequestParam(name = "golf_course", required = false) String golf_course,
 			@RequestParam(name = "hole_type", required = false) String hole_type,
 			@RequestParam(name = "tee_type", required = false) String tee_type,
-			@RequestParam(name = "handicap", required = false) String handicap) throws IOException {
+			@RequestParam(name = "handicap", required = false) String handicap, Principal principal) throws IOException {
 
 		HttpHeaders responseHeaders;
 		InputStream passInputStream = null;
 
 		responseHeaders = new HttpHeaders();
-		passInputStream = passbookService.createPassbook(name, age, gender, golf_course, hole_type, tee_type, handicap);
+		
+		String userId = principal.getName();
+		UserProfile profile = userProfileRepo.findByEmail(userId);
+		
+		
+		passInputStream = passbookService.createPassbook(name, age, gender, golf_course, hole_type, tee_type, handicap, profile.getUserId());
 
 		// Setup headers for 0 expiry and no cache
 		responseHeaders.add("Cache-Control", "no-cache, no-store, must-revalidate");
@@ -223,7 +234,7 @@ public class PushNotificationController {
 	public ResponseEntity<InputStreamResource> updatePassbook(
 			@PathVariable("passTypeIdentifier") String passTypeIdentifier,
 			@PathVariable("serialNumber") String serialNumber,
-			@RequestBody(required = false) Map<String, Object> payload) throws IOException {
+			@RequestBody(required = false) Map<String, Object> payload, Principal principal) throws IOException {
 		File newPass;
 		InputStream passInputStream = null;
 		HttpHeaders responseHeaders;

@@ -6,7 +6,7 @@ app.controller("passbookCtrl",function($scope, $http, $location, $document, $win
 
 	$scope.user = {
 		id: 0,
-		name: "",
+		name: userName,
 		age: "",
 		gender: "",
 		golf_course: "",

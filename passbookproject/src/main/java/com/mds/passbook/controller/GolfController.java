@@ -1,5 +1,6 @@
 package com.mds.passbook.controller;
 
+import java.security.Principal;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +22,9 @@ import com.mds.passbook.bean.GolfPass;
 import com.mds.passbook.bean.GolfScore;
 import com.mds.passbook.bean.GolfTee;
 import com.mds.passbook.bean.GolfUser;
+import com.mds.passbook.repo.UserProfileRepository;
+import com.mds.passbook.repo.dao.GolfUserDao;
+import com.mds.passbook.repo.dao.UserProfile;
 import com.mds.passbook.service.GolfService;
 
 
@@ -31,16 +35,23 @@ public class GolfController {
 	GolfService service;
 	
 	@Autowired
+	UserProfileRepository userProfileService;
+	
+	@Autowired
 	Environment env;
 	
 	@RequestMapping(value="/golfDetails", method=RequestMethod.GET)
-	public @ResponseBody HashMap<String, List<?>> getGolfViewDetails(){
+	public @ResponseBody HashMap<String, List<?>> getGolfViewDetails(Principal principal){
 		 
 		List<Object> response = new ArrayList<Object>();
 		
 		HashMap<String, List<?>> responseMap = new HashMap<>();
 
-		List<Golf> golf = service.findAllGolf();
+		UserProfile userProfile = userProfileService.findByEmail(principal.getName());
+		
+		GolfUserDao golfUser = userProfile.getUserId();
+		
+		List<Golf> golf = service.getAllGolf(golfUser);
 		List<GolfHoles> holes = service.findAllGolfHoles();
 		List<GolfTee> tees = service.findAllGolfTee();
 		List<GolfCourse> courses = service.findAllGolfCourses();

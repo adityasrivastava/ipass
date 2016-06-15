@@ -9,13 +9,18 @@
 	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
 	<script type="text/javascript" src="app/app.js"></script>
+<script th:inline="javascript">
+/*<![CDATA[*/
+    var userName = /*[[${user.name}]]*/ null;
+    /*]]>*/
+</script>
 
 	<script>
 		var updatePage = true;
 
 	</script>
 	<style type="text/css">
-		label{
+		/* label{
 			font-size: 20px;
 			color: white;
 		}
@@ -25,56 +30,56 @@
 		}
 		body{
 			background-color: #CBE32D;
-		}
+		} */
 	</style>
 </head>	
 
 <body >
-	<div class="container-fluid" ng-app="passbookApp">
+<hr/>
+	<div class="container" ng-app="passbookApp">
 
-		<div class="main-content col-sm-12" ng-controller="passbookCtrl">
+		<div ng-controller="passbookCtrl">
 
 
 			<br/>
 
-			<div class="game-container row">
-				<div class="game-label col-sm-2">
+			<div class="form-group">
+		
 					<label>Select Game Id:</label>
-				</div>
+				
 
-				<div class="game-input-box col-sm-2">
+				<div>
 					<select class="form-control" name="game" ng-model="user.gameId" ng-options="golf.id as golf.id for golf in data_properties.golf"></select>
 				</div>	
 			</div>
 
 
-			<div class="hole-container row">
-				<div class="hole-label col-sm-2">
+			<div class="form-group">
+			
 					<label>Select hole:</label>
-				</div>
-
-				<div class="hole-input-box col-sm-2">
+				
+				<div>
 					<select class="form-control" name="hole" ng-model="user.hole" ng-options="hole as hole for hole in data_properties.hole_numbers_array track by hole"></select>
 				</div>	
 			</div>
 
 
-			<div class="score-container row">
-				<div class="score-label col-sm-2">
+			<div class="form-group">
+				
 					<label>Score</label>
-				</div>
+				
 
-				<div class="score-input-box col-sm-3">
-					<input name="score" ng-model="user.score"/>
+				<div>
+					<input class="form-control" name="score" ng-model="user.score"/>
 				</div>	
 			</div>
 
 
 
 
-			<div class="submit-container row">
+			<div class="form-group">
 
-				<div class="update-button col-sm-1">
+				<div >
 					<button class="btn btn-primary" name="update" ng-click="updatePassbook()">Update</button>
 				</div>
 
@@ -90,7 +95,7 @@
 
 	</div>
 
-
+<hr/>
 
 </body>
 

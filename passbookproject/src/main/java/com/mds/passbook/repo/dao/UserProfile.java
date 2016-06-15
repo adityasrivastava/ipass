@@ -1,5 +1,6 @@
 package com.mds.passbook.repo.dao;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -7,6 +8,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 
@@ -37,6 +40,18 @@ public class UserProfile extends BaseEntity<Long>{
     @Enumerated(EnumType.STRING)
     @Column(name = "sign_in_provider", length = 20)
     private SocialMediaService signInProvider;
+    
+    @OneToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="GOLF_USER")
+    private GolfUserDao userId;
+
+	public GolfUserDao getUserId() {
+		return userId;
+	}
+
+	public void setUserId(GolfUserDao userId) {
+		this.userId = userId;
+	}
 
 	public SocialMediaService getSignInProvider() {
 		return signInProvider;
@@ -92,6 +107,13 @@ public class UserProfile extends BaseEntity<Long>{
 
 	public void setRole(Role role) {
 		this.role = role;
+	}
+
+	@Override
+	public String toString() {
+		return "UserProfile [id=" + id + ", email=" + email + ", firstName=" + firstName + ", lastName=" + lastName
+				+ ", password=" + password + ", role=" + role + ", signInProvider=" + signInProvider + ", userId="
+				+ userId + "]";
 	}
 
 

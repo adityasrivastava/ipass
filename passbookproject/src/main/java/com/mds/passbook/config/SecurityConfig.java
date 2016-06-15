@@ -1,5 +1,8 @@
 package com.mds.passbook.config;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +15,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.social.security.SpringSocialConfigurer;
+import org.thymeleaf.dialect.IDialect;
+import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
+import org.thymeleaf.spring4.SpringTemplateEngine;
 
 import com.mds.passbook.repo.UserProfileRepository;
 import com.mds.passbook.security.service.PassbookSecurityService;
@@ -33,31 +39,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.
-//		csrf()
-//		.disable().
+		csrf()
+		.disable().
 		formLogin()
 		.loginPage("/login")
+		.permitAll()
 		.and()
 		.authorizeRequests()
-		.antMatchers("/home")
-		.authenticated()
+		.antMatchers("/login").hasAnyRole("ANONYMOUS","USER")
+		.antMatchers("/signup").hasAnyRole("ANONYMOUS","USER")
+		.antMatchers("/golfDetails").hasAnyRole("ANONYMOUS","USER")
+		.antMatchers("/user").hasAnyRole("ANONYMOUS","USER")
+		.antMatchers("/holes").hasAnyRole("ANONYMOUS","USER")
+		.antMatchers("/tee").hasAnyRole("ANONYMOUS","USER")
+		.antMatchers("/score").hasAnyRole("ANONYMOUS","USER")
+		.antMatchers("/pass").hasAnyRole("ANONYMOUS","USER")
+		.antMatchers("/v1").hasAnyRole("ANONYMOUS","USER")
+		.antMatchers("/golfCourse").hasAnyRole("ANONYMOUS","USER")
+		.and()
+		.authorizeRequests()
+		.antMatchers("/**")
+		.hasRole("USER")
+		.and()
+		.rememberMe()
+//		.authenticated()
 		.and()
          .apply(new SpringSocialConfigurer());
-		
-		
-//		http
-//		.authorizeRequests()
-//		.anyRequest()
-//		.authenticated()
-//		.and()
-//		.formLogin()
-//		.loginPage("/login")
-//		.usernameParameter("username")
-//		.passwordParameter("password")
-//		.permitAll()
-////		.and()
-////		.apply(new SpringSocialConfigurer())
-//		.and().exceptionHandling().accessDeniedPage("/403");
+
 	}
 	
 	@Bean
@@ -69,6 +77,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public PassbookSecurityService userDetailsService(){
 		return new PassbookSecurityService(userProfileRepo);
 	}
-
 
 }

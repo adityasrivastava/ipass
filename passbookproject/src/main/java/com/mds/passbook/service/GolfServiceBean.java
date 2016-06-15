@@ -88,9 +88,15 @@ public class GolfServiceBean implements GolfService {
 	}
 
 	@Override
-	public void updateUser(GolfUser user) {
+	public GolfUser updateUser(GolfUser user) {
 		GolfUserDao userDao = new GolfUserDao();
-		golfUserRepo.save(userDao);
+		
+		userDao = GolfMapper.INSTANCE.GolfUserDTOtoGolfUserDAO(user);
+		userDao = golfUserRepo.save(userDao);
+		
+		user = GolfMapper.INSTANCE.GolfUserDAOtoGolfUserDTO(userDao);
+		
+		return user;
 	}
 
 	@Override
@@ -547,6 +553,15 @@ public class GolfServiceBean implements GolfService {
 		golfPass = GolfMapper.INSTANCE.GolfPassDAOtoGolfPassDTO(golfPassDao);
 
 		return golfPass;
+	}
+
+	@Override
+	public List<Golf> getAllGolf(GolfUserDao user) {
+		List<GolfDao> golfList = golfRepo.findByUsersId(user);
+		
+		List<Golf> golf = GolfMapper.INSTANCE.golfDAOListToGolfDTOList(golfList);
+		
+		return golf;
 	}
 
 }

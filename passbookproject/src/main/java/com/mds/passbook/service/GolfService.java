@@ -16,6 +16,7 @@ import com.mds.passbook.bean.PassRegistrations;
 import com.mds.passbook.repo.dao.GolfDao;
 import com.mds.passbook.repo.dao.GolfScoreDao;
 import com.mds.passbook.repo.dao.GolfTeeDao;
+import com.mds.passbook.repo.dao.GolfUserDao;
 import com.mds.passbook.repo.dao.PassRegistrationsDao;
 
 @Service
@@ -53,9 +54,10 @@ public interface GolfService {
 	GolfUser getUserById(int id);
 	GolfUser addUser(GolfUser user);
 	void deleteUser(GolfUser user);
-	void updateUser(GolfUser user);
+	GolfUser updateUser(GolfUser user);
 	
 	Iterable<GolfDao> getAllGolf();
+	List<Golf> getAllGolf(GolfUserDao user);
 	Golf getGolfById(int id);
 	void addGame(GolfDao golf);
 	void deleteGame(GolfDao golf);

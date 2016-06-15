@@ -19,6 +19,7 @@ import com.mds.passbook.bean.GolfUser;
 import com.mds.passbook.bean.PassRegistrations;
 import com.mds.passbook.repo.dao.GolfDao;
 import com.mds.passbook.repo.dao.GolfScoreDao;
+import com.mds.passbook.repo.dao.GolfUserDao;
 import com.mds.passkit.GeneratePass;
 import com.mds.passkit.GolfWallet;
 
@@ -32,7 +33,7 @@ public class PassbookServiceBean implements PassbookService{
 	InputStream fileInputStream = null;
 
 	@Override
-	public InputStream createPassbook(String name, String age, String gender, String golf_course, String hole_type, String tee_type, String handicap){
+	public InputStream createPassbook(String name, String age, String gender, String golf_course, String hole_type, String tee_type, String handicap, GolfUserDao userDao){
 
 		GolfUser user;
 		GolfGame golf;
@@ -49,14 +50,14 @@ public class PassbookServiceBean implements PassbookService{
 		
 		scores = new ArrayList<com.mds.passkit.GolfScore>();
 		
-		
+		user.setUserId(userDao.getUserId());
 		user.setAge(Integer.parseInt(age));
 		user.setGender(gender);
 		user.setHandicap(Integer.parseInt(handicap));
 		user.setName(name);
 		user.setPass(new GolfPass());
 
-		user = golfService.addUser(user);
+		user = golfService.updateUser(user);
 
 		golf.setCourseId(Integer.parseInt(golf_course));
 		golf.setHoleTypeId(Integer.parseInt(hole_type));
