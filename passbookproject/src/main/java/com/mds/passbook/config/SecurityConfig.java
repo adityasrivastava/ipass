@@ -54,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers("/tee").hasAnyRole("ANONYMOUS","USER")
 		.antMatchers("/score").hasAnyRole("ANONYMOUS","USER")
 		.antMatchers("/pass").hasAnyRole("ANONYMOUS","USER")
-		.antMatchers("/v1").hasAnyRole("ANONYMOUS","USER")
+		.antMatchers("/v1/**").permitAll()
 		.antMatchers("/golfCourse").hasAnyRole("ANONYMOUS","USER")
 		.and()
 		.authorizeRequests()
